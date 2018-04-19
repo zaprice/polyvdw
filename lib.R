@@ -2,6 +2,42 @@
 # sqrt tolerance
 TOL <- .00000001
 
+#######################
+# Objects
+#######################
+
+# Initialize output objects
+init <- function() {
+  fareys <<- list()
+  triples <<- list()
+  kfours <<- list()
+
+  fareys$mat <<- matrix(nrow=100, ncol=2)
+  colnames(fareys$mat) <<- c("num", "denom")
+  triples$mat <<- matrix(nrow=1000, ncol=4)
+  colnames(triples$mat) <<- c("a", "x", "y", "is.primitive")
+  kfours$mat <<- matrix(nrow=15, ncol=4)
+  colnames(kfours$mat) <<- c("x", "y", "z", "is.primitive")
+
+  fareys$row <<- 1
+  triples$row <<- 1
+  kfours$row <<- 1
+}
+
+# Add new row to mat object, resizing if necessary
+addnew <- function(mat, new) {
+  mat$mat[mat$row,] <- new
+  mat$row <- mat$row +1
+  if(mat$row > nrow(mat$mat)) {
+    mat$mat <- rbind(mat$mat, matrix(nrow=nrow(mat$mat), ncol=ncol(mat$mat)))
+  }
+  return(mat)
+}
+
+#######################
+# Math Stuff
+#######################
+
 # Generate the next term in the Farey sequence
 next.farey <- function() {
   x <<- trunc((y1+FAREY_MAX)/y2)*x2 -x1
@@ -25,12 +61,6 @@ is.square <- function(num) {
   (sqrt(num) - trunc(sqrt(num))) < TOL
 }
 
-write <- function() {
-  write.csv(fareys, "~/Documents/polyvdw/fareys.csv", row.names=F)
-  write.csv(triples, "~/Documents/polyvdw/triples.csv", row.names=F)
-  write.csv(kfours, "~/Documents/polyvdw/kfours.csv", row.names=F)
-}
-
 # Check if any kfour is completed to the configuration by square
 check.kfours <- function(kfours.sqd, square) {
   is.conf <- apply(kfours.sqd, 1, function(row) { check.row(row, square) })
@@ -49,4 +79,14 @@ check.kfours <- function(kfours.sqd, square) {
 check.row <- function(row, square) {
   w <- row[3]+square
   is.square(w-row[1]) & is.square(w-row[2])
+}
+
+#######################
+# Other
+#######################
+
+write <- function() {
+  write.csv(fareys$mat[1:fareys$row,], "~/Documents/polyvdw/fareys.csv", row.names=F)
+  write.csv(triples$mat[1:triples$row,], "~/Documents/polyvdw/triples.csv", row.names=F)
+  write.csv(kfours$mat[1:kfours$row,], "~/Documents/polyvdw/kfours.csv", row.names=F)
 }
