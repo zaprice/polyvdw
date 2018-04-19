@@ -1,6 +1,6 @@
 
 # sqrt tolerance
-TOL <- .00000001
+TOL <- .000000000001
 
 #######################
 # Objects
@@ -12,11 +12,11 @@ init <- function() {
   triples <<- list()
   kfours <<- list()
 
-  fareys$mat <<- matrix(nrow=100, ncol=2)
+  fareys$mat <<- matrix(nrow=5000, ncol=2)
   colnames(fareys$mat) <<- c("num", "denom")
-  triples$mat <<- matrix(nrow=1000, ncol=4)
+  triples$mat <<- matrix(nrow=100000, ncol=4)
   colnames(triples$mat) <<- c("a", "x", "y", "is.primitive")
-  kfours$mat <<- matrix(nrow=15, ncol=4)
+  kfours$mat <<- matrix(nrow=30, ncol=4)
   colnames(kfours$mat) <<- c("x", "y", "z", "is.primitive")
 
   fareys$row <<- 1
@@ -69,7 +69,8 @@ check.kfours <- function(kfours.sqd, square) {
     rows <- which(is.conf)
     for(row in rows) {
       tmp <- sqrt(kfours.sqd[row,])
-      print(paste(tmp[1],tmp[2],tmp[3], sqrt(tmp[3]^2+square)))
+      conf <- c(tmp[1],tmp[2],tmp[3], sqrt(tmp[3]^2+square))
+      print(paste(conf))
     }
   }
 }
@@ -86,7 +87,7 @@ check.row <- function(row, square) {
 #######################
 
 write <- function() {
-  write.csv(fareys$mat[1:fareys$row,], "~/Documents/polyvdw/fareys.csv", row.names=F)
-  write.csv(triples$mat[1:triples$row,], "~/Documents/polyvdw/triples.csv", row.names=F)
-  write.csv(kfours$mat[1:kfours$row,], "~/Documents/polyvdw/kfours.csv", row.names=F)
+  write.csv(fareys$mat[1:(fareys$row-1),], "~/Documents/polyvdw/fareys.csv", row.names=F)
+  write.csv(triples$mat[1:(triples$row-1),], "~/Documents/polyvdw/triples.csv", row.names=F)
+  write.csv(kfours$mat[1:(kfours$row-1),], "~/Documents/polyvdw/kfours.csv", row.names=F)
 }
