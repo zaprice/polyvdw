@@ -8,19 +8,11 @@ TOL <- .000000000001
 
 # Initialize output objects
 init <- function() {
-  fareys <<- list()
-  triples <<- list()
+  triples <<- new.env(hash=T)
   kfours <<- list()
-
-  fareys$mat <<- matrix(nrow=5000, ncol=2)
-  colnames(fareys$mat) <<- c("num", "denom")
-  triples$mat <<- matrix(nrow=100000, ncol=4)
-  colnames(triples$mat) <<- c("a", "x", "y", "is.primitive")
   kfours$mat <<- matrix(nrow=30, ncol=4)
   colnames(kfours$mat) <<- c("x", "y", "z", "is.primitive")
 
-  fareys$row <<- 1
-  triples$row <<- 1
   kfours$row <<- 1
 }
 
@@ -51,8 +43,13 @@ next.farey <- function() {
 }
 
 # Generates a pythagorean triple; m n are coprime, m > n, not both odd
+# In sorted order, swapping a,b as determined by the params
 triple <- function(k, m, n) {
-  c(k*(m^2-n^2), k*2*m*n, k*(m^2+n^2))
+  if(m/n - n/m > 2) {
+    c(k*2*m*n, k*(m^2-n^2), k*(m^2+n^2))
+  } else {
+    c(k*(m^2-n^2), k*2*m*n, k*(m^2+n^2))
+  }
 }
 
 # Check if a number is square
@@ -69,7 +66,7 @@ check.kfours <- function(kfours.sqd, square) {
     rows <- which(is.conf)
     for(row in rows) {
       tmp <- sqrt(kfours.sqd[row,])
-      conf <- c(tmp[1],tmp[2],tmp[3], sqrt(tmp[3]^2+square))
+      conf <- c(tmp[1],tmp[2],tmp[3], tmp[3]^2+square)
       print(paste(conf))
     }
   }
@@ -87,7 +84,5 @@ check.row <- function(row, square) {
 #######################
 
 write <- function() {
-  write.csv(fareys$mat[1:(fareys$row-1),], "~/Documents/polyvdw/fareys.csv", row.names=F)
-  write.csv(triples$mat[1:(triples$row-1),], "~/Documents/polyvdw/triples.csv", row.names=F)
   write.csv(kfours$mat[1:(kfours$row-1),], "~/Documents/polyvdw/kfours.csv", row.names=F)
 }

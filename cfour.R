@@ -3,7 +3,7 @@ library(profvis)
 source('~/Documents/polyvdw/lib.R')
 
 # Config vars
-FAREY_MAX <- 10000
+FAREY_MAX <- 700
 count <- 1
 K_MAX <- 100
 
@@ -20,7 +20,6 @@ x <- y <- 0
 while(y != 1) {
   # Generate next Farey pair
   new.farey <- next.farey()
-  fareys <- addnew(fareys, new.farey)
 
   # Skip rest if both are odd
   if(all((new.farey %% 2) == 1)) { next }
@@ -28,26 +27,24 @@ while(y != 1) {
   # Loop over K param for Euclid's formula
   for(k in 1:K_MAX) {
     # Generate a triple with it
-    new.triple <- sort(triple(k, new.farey[2], new.farey[1]))
+    new.triple <- triple(k, new.farey[2], new.farey[1])
 
 
     # Check against previous triples for K4s
     # You only need to check the first one for reasons
-    overlaps <- which(triples$mat[1:triples$row,1] == new.triple[1])
-    for(i in overlaps) {
-      over <- triples$mat[i,]
-      # Now we have b,c such that x^2 + b^2 = y^2 + c^2
-      # Need to check if it is a square
-      if(is.square(new.triple[2]^2 + over[3]^2)) {
-        # Found a new K4
-        new.kfour <- c(new.triple[2], new.triple[3], sqrt(new.triple[2]^2 + over[3]^2))
-
-        kfours <- addnew(kfours, c(new.kfour, k))
+    ind <- as.character(new.triple[1])
+    if(is.null(triples[[ind]])) {
+      triples[[ind]] <- list(new.triple)
+    } else {
+      for(over in triples[[ind]]) {
+        if(is.square(new.triple[2]^2 + over[3]^2)) {
+          # Found a new K4
+          new.kfour <- c(new.triple[2], new.triple[3], sqrt(new.triple[2]^2 + over[3]^2))
+          kfours <- addnew(kfours, c(new.kfour, k))
+        }
       }
+      triples[[ind]][[length(triples[[ind]])+1]] <- new.triple
     }
-
-    # Save, flag at the end if it's primitive
-    triples <- addnew(triples, c(new.triple, as.numeric(k==1)))
   }
 
   # Write out results every 1000 usable Fareys
