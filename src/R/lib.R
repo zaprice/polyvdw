@@ -79,6 +79,20 @@ check.row <- function(row, square) {
   is.square(w-row[1]) & is.square(w-row[2])
 }
 
+# Check if vector v is a Pythagorean Kn
+is.pyth <- function(v) {
+  v <- v^2
+  for(i in 1:length(v)) {
+    for(j in i:length(v)) {
+      print(sqrt(v[j] - v[i]))
+      if(!is.square(v[j] - v[i])) {
+        return(F)
+      }
+    }
+  }
+  T
+}
+
 #######################
 # Other
 #######################

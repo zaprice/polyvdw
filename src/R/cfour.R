@@ -3,7 +3,7 @@ library(profvis)
 source('~/Documents/polyvdw/lib.R')
 
 # Config vars
-FAREY_MAX <- 579
+FAREY_MAX <- 700
 count <- 1
 K_MAX <- 100
 
