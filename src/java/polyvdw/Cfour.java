@@ -1,4 +1,6 @@
 
+package polyvdw;
+
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -6,18 +8,20 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.charset.Charset;
 import java.io.IOException;
+import static polyvdw.VdwLib.*;
 
 public class Cfour {
 
-  static final long FAREY_MAX = 10000;
+  static final long FAREY_MAX = 2500;
   static final long K_MAX = 100;
+  static final String OUT_PATH = "/Users/zach/Documents/polyvdw/kthrees.csv";
   static int count = 1;
 
   public static void main(String[] args) throws IOException {
 
     // Initialize output vars
     HashMap<Long, ArrayList<long[]>> triples = new HashMap<Long, ArrayList<long[]>>(30000);
-    ArrayList<long[]> kfours = new ArrayList<long[]>();
+    ArrayList<long[]> kthrees = new ArrayList<long[]>();
 
     // Farey var setup
     long[] fareyArgs = new long[] {0,1,1,FAREY_MAX,0,0};
@@ -38,7 +42,7 @@ public class Cfour {
         // Generate a new triple
         long[] newTriple = triple(k, newFarey[1], newFarey[0]);
 
-        // Check against previous triples for K4s
+        // Check against previous triples for K3s
         // You only need to check the first element for reasons
         Long ind = new Long(newTriple[0]);
         if(!triples.containsKey(ind)) {
@@ -48,9 +52,12 @@ public class Cfour {
         } else {
           for(long[] over : triples.get(ind)) {
             if(isSquare(sq(newTriple[1]) + sq(over[2]))) {
-              // Found a new K4
-              long[] newKfour = {newTriple[1], newTriple[2], (long)Math.sqrt(sq(newTriple[1]) + sq(over[2]))};
-              kfours.add(newKfour);
+              // Found a new K3
+              long[] newKthree = new long[] {newTriple[1], newTriple[2], (long)Math.sqrt(sq(newTriple[1]) + sq(over[2]))};
+              kthrees.add(newKthree);
+              // And another one by symmetry
+              newKthree = new long[] {over[1], over[2], (long)Math.sqrt(sq(newTriple[1]) + sq(over[2]))};
+              kthrees.add(newKthree);
             }
           }
           triples.get(ind).add(newTriple);
@@ -58,12 +65,12 @@ public class Cfour {
       }
 
       if((count % 100000) == 0) {
-        write(kfours);
+        write(kthrees, OUT_PATH);
       }
       count++;
     }
     // Write out results
-    write(kfours);
+    write(kthrees, OUT_PATH);
   }
 
   /////////////////////////////////
@@ -92,14 +99,6 @@ public class Cfour {
     }
   }
 
-  public static long sq(long n) {
-    return(n*n);
-  }
-
-  public static boolean isSquare(long n) {
-    return(sq((long)Math.sqrt(n)) == n);
-  }
-
   // Return true if all elements of ary are odd
   public static boolean odd(long[] ary) {
     for(long i : ary) {
@@ -110,11 +109,12 @@ public class Cfour {
     return(true);
   }
 
-  public static void write(ArrayList<long[]> kfours) throws IOException {
-    ArrayList<String> output = new ArrayList<String>(kfours.size());
-    for(long[] kfour : kfours) {
-      output.add(Arrays.toString(kfour));
+  public static void write(ArrayList<long[]> kthrees, String filename) throws IOException {
+    ArrayList<String> output = new ArrayList<String>(kthrees.size());
+    for(long[] kthree : kthrees) {
+      output.add(rowToString(kthree));
     }
-    Files.write(Paths.get("/Users/zach/Documents/polyvdw/kfours.csv"), output, Charset.forName("UTF-8"));
+    Files.write(Paths.get(filename), output, Charset.forName("UTF-8"));
   }
+
 }
