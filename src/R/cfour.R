@@ -1,6 +1,6 @@
 
 library(profvis)
-source('~/Documents/polyvdw/lib.R')
+source('~/Documents/polyvdw/src/R/lib.R')
 
 # Config vars
 FAREY_MAX <- 700
@@ -30,7 +30,7 @@ while(y != 1) {
     new.triple <- triple(k, new.farey[2], new.farey[1])
 
 
-    # Check against previous triples for K4s
+    # Check against previous triples for K3s
     # You only need to check the first one for reasons
     ind <- as.character(new.triple[1])
     if(is.null(triples[[ind]])) {
@@ -38,9 +38,9 @@ while(y != 1) {
     } else {
       for(over in triples[[ind]]) {
         if(is.square(new.triple[2]^2 + over[3]^2)) {
-          # Found a new K4
-          new.kfour <- c(new.triple[2], new.triple[3], sqrt(new.triple[2]^2 + over[3]^2))
-          kfours <- addnew(kfours, c(new.kfour, k))
+          # Found a new K3
+          new.kthree <- c(new.triple[2], new.triple[3], sqrt(new.triple[2]^2 + over[3]^2))
+          kthrees <- addnew(kthrees, c(new.kthree, k))
         }
       }
       triples[[ind]][[length(triples[[ind]])+1]] <- new.triple

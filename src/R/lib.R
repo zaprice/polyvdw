@@ -9,11 +9,11 @@ TOL <- .000000000001
 # Initialize output objects
 init <- function() {
   triples <<- new.env(hash=T)
-  kfours <<- list()
-  kfours$mat <<- matrix(nrow=30, ncol=4)
-  colnames(kfours$mat) <<- c("x", "y", "z", "is.primitive")
+  kthrees <<- list()
+  kthrees$mat <<- matrix(nrow=30, ncol=4)
+  colnames(kthrees$mat) <<- c("x", "y", "z", "is.primitive")
 
-  kfours$row <<- 1
+  kthrees$row <<- 1
 }
 
 # Add new row to mat object, resizing if necessary
@@ -58,14 +58,14 @@ is.square <- function(num) {
   (sqrt(num) - trunc(sqrt(num))) < TOL
 }
 
-# Check if any kfour is completed to the configuration by square
-check.kfours <- function(kfours.sqd, square) {
-  is.conf <- apply(kfours.sqd, 1, function(row) { check.row(row, square) })
+# Check if any kthree is completed to the configuration by square
+check.kthrees <- function(kthrees.sqd, square) {
+  is.conf <- apply(kthrees.sqd, 1, function(row) { check.row(row, square) })
   if(any(is.conf)) {
     print("WINNER!!")
     rows <- which(is.conf)
     for(row in rows) {
-      tmp <- sqrt(kfours.sqd[row,])
+      tmp <- sqrt(kthrees.sqd[row,])
       conf <- c(tmp[1],tmp[2],tmp[3], tmp[3]^2+square)
       print(paste(conf))
     }
@@ -98,5 +98,5 @@ is.pyth <- function(v) {
 #######################
 
 write <- function() {
-  write.csv(kfours$mat[1:(kfours$row-1),], "~/Documents/polyvdw/kfours.csv", row.names=F)
+  write.csv(kthrees$mat[1:(kthrees$row-1),], "~/Documents/polyvdw/kthrees.csv", row.names=F)
 }
