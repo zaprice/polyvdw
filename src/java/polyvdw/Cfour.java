@@ -3,11 +3,6 @@ package polyvdw;
 
 import java.util.HashMap;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.charset.Charset;
-import java.io.IOException;
 import static polyvdw.VdwLib.*;
 
 public class Cfour {
@@ -17,20 +12,19 @@ public class Cfour {
   static final String OUT_PATH = "/Users/zach/Documents/polyvdw/kthrees.csv";
   static int count = 1;
 
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) throws Exception {
 
     // Initialize output vars
     HashMap<Long, ArrayList<long[]>> triples = new HashMap<Long, ArrayList<long[]>>(30000);
     ArrayList<long[]> kthrees = new ArrayList<long[]>();
 
     // Farey var setup
-    long[] fareyArgs = new long[] {0,1,1,FAREY_MAX,0,0};
+    FareyGenerator fareys = new FareyGenerator(FAREY_MAX);
 
     // Farey loop
-    while(fareyArgs[5] != 1) {
+    while(!fareys.isDone()) {
       // Generate next Farey pair
-      fareyArgs = nextFarey(fareyArgs);
-      long[] newFarey = new long[] {fareyArgs[4], fareyArgs[5]};
+      long[] newFarey = fareys.nextFarey();
 
       // Skip rest if both are odd
       if(odd(newFarey)) {
@@ -98,23 +92,5 @@ public class Cfour {
       return(new long[] {k*(sq(m)-sq(n)), k*2*m*n, k*(sq(m)+sq(n))});
     }
   }
-
-  // Return true if all elements of ary are odd
-  public static boolean odd(long[] ary) {
-    for(long i : ary) {
-      if((i % 2) == 0) {
-        return(false);
-      }
-    }
-    return(true);
-  }
-
-  public static void write(ArrayList<long[]> kthrees, String filename) throws IOException {
-    ArrayList<String> output = new ArrayList<String>(kthrees.size());
-    for(long[] kthree : kthrees) {
-      output.add(rowToString(kthree));
-    }
-    Files.write(Paths.get(filename), output, Charset.forName("UTF-8"));
-  }
-
+  
 }
