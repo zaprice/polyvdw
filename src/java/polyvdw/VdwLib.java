@@ -3,10 +3,12 @@ package polyvdw;
 
 import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.List;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.charset.Charset;
 import java.io.IOException;
+import java.lang.Long;
 
 public class VdwLib {
 
@@ -28,6 +30,10 @@ public class VdwLib {
     return(true);
   }
 
+  public static boolean isPronic(long n) {
+    return(Math.floor(Math.sqrt(n))*Math.ceil(Math.sqrt(n)) == n);
+  }
+
   public static String rowToString(long[] kthree) {
     String str = Arrays.toString(kthree);
     return(str.substring(1,str.length()-1));
@@ -39,5 +45,17 @@ public class VdwLib {
       output.add(rowToString(kthree));
     }
     Files.write(Paths.get(filename), output, Charset.forName("UTF-8"));
+  }
+
+  public static ArrayList<long[]> read(String filename) throws IOException {
+    List<String> lines = Files.readAllLines(Paths.get(filename));
+    ArrayList<long[]> output = new ArrayList<long[]>(lines.size());
+
+    for(String line : lines) {
+      String[] parts = line.split(", ");
+      long[] kthree = new long[] {Long.parseLong(parts[0]), Long.parseLong(parts[1]), Long.parseLong(parts[2])};
+      output.add(kthree);
+    }
+    return(output);
   }
 }

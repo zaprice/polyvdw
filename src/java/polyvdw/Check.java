@@ -2,18 +2,13 @@
 package polyvdw;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.io.IOException;
-import java.lang.Long;
 import static polyvdw.VdwLib.*;
 
 public class Check {
 
   static final int MAX_SQUARE = 100000;
 
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) throws Exception {
 
     ArrayList<long[]> kthrees = read("/Users/zach/Documents/polyvdw/kthrees.csv");
     long[] squares = getSquares(MAX_SQUARE);
@@ -46,15 +41,4 @@ public class Check {
     }
   }
 
-  public static ArrayList<long[]> read(String filename) throws IOException {
-    List<String> lines = Files.readAllLines(Paths.get(filename));
-    ArrayList<long[]> output = new ArrayList<long[]>(lines.size());
-
-    for(String line : lines) {
-      String[] parts = line.split(", ");
-      long[] kthree = new long[] {Long.parseLong(parts[0]), Long.parseLong(parts[1]), Long.parseLong(parts[2])};
-      output.add(kthree);
-    }
-    return(output);
-  }
 }
