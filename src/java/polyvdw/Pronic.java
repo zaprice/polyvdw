@@ -7,7 +7,7 @@ import static polyvdw.VdwLib.*;
 
 public class Pronic {
 
-  static final long MAX = 600;
+  static final long MAX = 100;
   static final String OUT_PATH = "/Users/zach/Documents/polyvdw/pronic_kthrees.csv";
 
   public static void main(String[] args)  throws Exception {
@@ -64,7 +64,7 @@ public class Pronic {
   }
 
   private static boolean bad(long a, long b, long c, long d) {
-    return((b*c - a*d != 1) || (a*c <= b*d +1) || ((b*c+a*d) % 2 == 0) || ((a*c-b*d) % 2 == 0));
+    return((a*c <= b*d +1) || ((b*c+a*d)*(a*c-b*d) % 2 == 0));
   }
 
   public static boolean isPronic(long n) {
