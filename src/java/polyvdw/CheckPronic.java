@@ -35,7 +35,7 @@ public class CheckPronic {
     if(isPronic(w-sq(kthree[0])-kthree[0]) && isPronic(w-sq(kthree[1])-kthree[1])) {
       String printstr = rowToString(kthree) + ", " + w;
       System.out.println(printstr);
-      if(isSquare(w)) {
+      if(isPronic(w)) {
         System.out.println("^ is a K4");
       }
     }

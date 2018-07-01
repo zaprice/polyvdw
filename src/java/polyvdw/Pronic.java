@@ -46,11 +46,11 @@ public class Pronic {
             // Write out results
             write(kthrees, OUT_PATH);
           }
-
+        }
+        triples.get(ind).add(newTriple);
       }
     }
   }
-}
 
   public static long[] triple(long[] params) {
     long x = (params[1]*params[2] + params[0]*params[3] - 1)/2;
@@ -67,7 +67,7 @@ public class Pronic {
     return((b*c - a*d != 1) || (a*c <= b*d +1) || ((b*c+a*d) % 2 == 0) || ((a*c-b*d) % 2 == 0));
   }
 
-    public static boolean isPronic(long n) {
-      return(Math.floor(Math.sqrt(n))*Math.ceil(Math.sqrt(n)) == n);
-    }
+  public static boolean isPronic(long n) {
+    return(Math.floor(Math.sqrt(n))*Math.ceil(Math.sqrt(n)) == n);
+  }
 }
