@@ -14,9 +14,9 @@ public class QuadGenerator {
     this.MAX = MAX;
     // First working parameter set
     a = 0;
-    b = 1;
-    c = 1;
-    d = 1;
+    b = 0;
+    c = 0;
+    d = 0;
   }
 
   public long[] nextQuad() {
