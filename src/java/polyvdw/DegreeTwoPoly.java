@@ -59,7 +59,7 @@ public class DegreeTwoPoly {
     long w3 = params[0]*params[2] + params[1]*params[3];
     return((w2 == w3) || (w1 == w3) ||
            (params[1]*params[2] - params[0]*params[3] != B) ||
-           (params[0]*params[2] <= params[1]*params[3] + 1) ||
+           (params[0]*params[2] <= params[1]*params[3] + B) ||
            ((w1-B) % (2*A) != 0) ||
            ((w2-B) % (2*A) != 0) ||
            ((w3-B) % (2*A) != 0));
