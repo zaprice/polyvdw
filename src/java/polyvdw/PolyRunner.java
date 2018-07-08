@@ -10,9 +10,12 @@ public class PolyRunner {
   static final long MAX = 600;
   static final long PARAM_MAX = 10;
   static final long CHECK_MAX = 100000;
+  static final String OUT_PATH = "/Users/zach/Documents/polyvdw/bounds.csv";
   static long[] min;
+  static ArrayList<String> outputList;
 
   public static void main(String[] args)  throws Exception {
+    outputList = new ArrayList<String>();
     for(long a = 1; a <= PARAM_MAX; a++) {
       for(long b = 0; b <= PARAM_MAX; b++) {
         min = new long[] {0, 0, 0, Long.MAX_VALUE};
@@ -54,8 +57,10 @@ public class PolyRunner {
         triples.get(ind).add(newTriple);
       }
     }
-    System.out.println(poly.toString());
-    System.out.println(rowToString(min));
+    String output = poly.toString() + " : " + rowToString(min);
+    System.out.println(output);
+    outputList.add(output);
+    write(outputList, OUT_PATH);
     if(!doubleCheck(poly, min)) {
       throw new Exception("configuration does not work");
     }
