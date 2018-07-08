@@ -44,7 +44,7 @@ public class Pronic {
             newKthree = new long[] {over[1], over[2], (long)Math.sqrt(sq(newTriple[1]) + newTriple[1] + sq(over[2]) + over[2])};
             kthrees.add(newKthree);
             // Write out results
-            write(kthrees, OUT_PATH);
+            writeKthrees(kthrees, OUT_PATH);
           }
         }
         triples.get(ind).add(newTriple);

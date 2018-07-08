@@ -59,12 +59,12 @@ public class Cfour {
       }
 
       if((count % 100000) == 0) {
-        write(kthrees, OUT_PATH);
+        writeKthrees(kthrees, OUT_PATH);
       }
       count++;
     }
     // Write out results
-    write(kthrees, OUT_PATH);
+    writeKthrees(kthrees, OUT_PATH);
   }
 
   /////////////////////////////////
@@ -92,5 +92,5 @@ public class Cfour {
       return(new long[] {k*(sq(m)-sq(n)), k*2*m*n, k*(sq(m)+sq(n))});
     }
   }
-  
+
 }

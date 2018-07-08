@@ -39,12 +39,16 @@ public class VdwLib {
     return(str.substring(1,str.length()-1));
   }
 
-  public static void write(ArrayList<long[]> kthrees, String filename) throws IOException {
+  public static void write(Iterable<? extends CharSequence> output, String filename) throws IOException {
+    Files.write(Paths.get(filename), output, Charset.forName("UTF-8"));
+  }
+
+  public static void writeKthrees(ArrayList<long[]> kthrees, String filename) throws IOException {
     ArrayList<String> output = new ArrayList<String>(kthrees.size());
     for(long[] kthree : kthrees) {
       output.add(rowToString(kthree));
     }
-    Files.write(Paths.get(filename), output, Charset.forName("UTF-8"));
+    write(output, filename);
   }
 
   public static ArrayList<long[]> read(String filename) throws IOException {
