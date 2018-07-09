@@ -1,3 +1,7 @@
 .DS_Store
 *.csv
 *.class
+*.tex
+*.pdf
+*.aux
+*.log

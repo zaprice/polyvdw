@@ -4,24 +4,33 @@ package polyvdw;
 import java.util.HashMap;
 import java.util.ArrayList;
 import static polyvdw.VdwLib.*;
+import static polyvdw.TikzLib.*;
 
 public class PolyRunner {
 
   static final long MAX = 600;
   static final long PARAM_MAX = 10;
   static final long CHECK_MAX = 100000;
-  static final String OUT_PATH = "/Users/zach/Documents/polyvdw/bounds.csv";
+  static final String OUT_PATH = "/Users/zach/Documents/polyvdw/bounds.tex";
   static long[] min;
   static ArrayList<String> outputList;
+  static int count;
 
   public static void main(String[] args)  throws Exception {
+    count = 0;
     outputList = new ArrayList<String>();
+    outputList.add(TikzLib.preamble);
     for(long a = 1; a <= PARAM_MAX; a++) {
       for(long b = 0; b <= PARAM_MAX; b++) {
         min = new long[] {0, 0, 0, Long.MAX_VALUE};
         minBound(a, b, MAX, CHECK_MAX);
+        if(count % 2 == 0 & count != 0) {
+          outputList.add("\\pagebreak");
+        }
       }
     }
+    outputList.add(TikzLib.end);
+    write(outputList, OUT_PATH);
   }
 
   public static void minBound(long a, long b, long max, long check_max) throws Exception {
@@ -59,8 +68,12 @@ public class PolyRunner {
     }
     String output = poly.toString() + " : " + rowToString(min);
     System.out.println(output);
-    outputList.add(output);
-    write(outputList, OUT_PATH);
+    if(!(min[3] == Long.MAX_VALUE)) {
+      outputList.add("$ PW(4, " + poly.toString() + ") < " + poly.toBound(min[3]) + "$\n\\vspace{10pt}\n");
+      outputList.addAll(configToTikz(poly, min));
+      write(outputList, OUT_PATH);
+      count++;
+    }
     if(!doubleCheck(poly, min)) {
       throw new Exception("configuration does not work");
     }
@@ -85,11 +98,7 @@ public class PolyRunner {
       if(poly.isNumber(w-poly.val(kthree[0])) && poly.isNumber(w-poly.val(kthree[1]))) {
         // New bound configuration; compare to previous smallest
         minCandidate(new long[] {kthree[0], kthree[1], kthree[2], w});
-        if(poly.isNumber(w)) {
-          String printstr = rowToString(kthree) + ", " + w;
-          //System.out.println(printstr);
-          //System.out.println("^ is a K4");
-        }
+        return;
       }
     }
   }

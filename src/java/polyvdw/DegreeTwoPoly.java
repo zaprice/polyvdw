@@ -39,6 +39,10 @@ public class DegreeTwoPoly {
     return(A + "x^2 + " + B + "x");
   }
 
+  public String toBound(long w) {
+    return("1+"+w+"("+A+"*"+w+"+"+B+") = " + (1+val(w)));
+  }
+
   public long[] triple(long[] params) {
     long w1 = params[1]*params[2] + params[0]*params[3];
     long w2 = params[0]*params[2] - params[1]*params[3];
