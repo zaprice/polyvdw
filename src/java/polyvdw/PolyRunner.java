@@ -8,9 +8,9 @@ import static polyvdw.TikzLib.*;
 
 public class PolyRunner {
 
-  static final long MAX = 600;
-  static final long PARAM_MAX = 10;
-  static final long CHECK_MAX = 100000;
+  static final long MAX = 200;
+  static final long PARAM_MAX = 1000;
+  static final long CHECK_MAX = 10000;
   static final String OUT_PATH = "/Users/zach/Documents/polyvdw/bounds.tex";
   static long[] min;
   static ArrayList<String> outputList;
@@ -22,6 +22,12 @@ public class PolyRunner {
     outputList.add(TikzLib.preamble);
     for(long a = 1; a <= PARAM_MAX; a++) {
       for(long b = 0; b <= PARAM_MAX; b++) {
+        // Skip iterations if they are a multiple of (1, n)
+        // TODO: skip if they are multiples of any previous iteration
+        // TODO: algorithm does not find bounds for (a,b) coprime, a > 1
+        if(b % a == 0 && a != 1) {
+          continue;
+        }
         min = new long[] {0, 0, 0, Long.MAX_VALUE};
         minBound(a, b, MAX, CHECK_MAX);
         if(count % 2 == 0 & count != 0) {
