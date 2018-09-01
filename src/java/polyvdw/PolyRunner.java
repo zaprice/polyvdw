@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import static polyvdw.VdwLib.*;
 import static polyvdw.TikzLib.*;
+import java.util.Arrays;
 
 public class PolyRunner {
 
@@ -15,6 +16,7 @@ public class PolyRunner {
   static long[] min;
   static ArrayList<String> outputList;
   static int count;
+  static boolean next;
 
   public static void main(String[] args)  throws Exception {
     count = 0;
@@ -24,7 +26,7 @@ public class PolyRunner {
       for(long b = 0; b <= PARAM_MAX; b++) {
         // Skip iterations if they are a multiple of (1, n)
         // TODO: skip if they are multiples of any previous iteration
-        // TODO: algorithm does not find bounds for (a,b) coprime, a > 1
+        // TODO: algorithm does not find bounds for (a,b) with a > 1, a does not divide b
         if(b % a == 0 && a != 1) {
           continue;
         }
@@ -43,6 +45,7 @@ public class PolyRunner {
     // Initialize output vars
     HashMap<Long, ArrayList<long[]>> triples = new HashMap<Long, ArrayList<long[]>>(30000);
     ArrayList<long[]> kthrees = new ArrayList<long[]>();
+    next = false;
 
     QuadGenerator params = new QuadGenerator(max);
     DegreeTwoPoly poly = new DegreeTwoPoly(a,b);
@@ -62,14 +65,20 @@ public class PolyRunner {
       } else {
         for(long[] over : triples.get(ind)) {
           if(over[1] == newTriple[1]) {
+            // TODO: this should be break?
             continue;
           }
           if(poly.isNumber(poly.val(newTriple[1]) + poly.val(over[2]))) {
             // Found a new K3
             kthrees = addNewKthree(kthrees, poly, newTriple, over);
+            if(next) { break ;}
           }
         }
         triples.get(ind).add(newTriple);
+      }
+      if(next) {
+        System.out.println(Arrays.toString(p));
+        break;
       }
     }
     String output = poly.toString() + " : " + rowToString(min);
@@ -112,6 +121,7 @@ public class PolyRunner {
   public static void minCandidate(long[] kthreew) {
     if(kthreew[3] < min[3]) {
       min = kthreew;
+      next = true;
     }
   }
 

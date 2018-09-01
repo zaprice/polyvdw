@@ -4,6 +4,7 @@ package polyvdw;
 public class QuadGenerator {
 
   long MAX;
+  long currentMax;
   long a;
   long b;
   long c;
@@ -12,6 +13,7 @@ public class QuadGenerator {
 
   public QuadGenerator(long MAX) {
     this.MAX = MAX;
+    currentMax = 1;
     // First working parameter set
     a = 0;
     b = 0;
@@ -20,28 +22,39 @@ public class QuadGenerator {
   }
 
   public long[] nextQuad() {
-    if(a == MAX) {
-      a = 1;
-      if(b == MAX) {
-        b = 1;
-        if(c == MAX) {
-          c = 1;
-          d++;
+    // Add one to (a,b,c,d), the usual way
+    if(d == currentMax) {
+      d = 1;
+      if(c == currentMax) {
+        c = 1;
+        if(b == currentMax) {
+          b = 1;
+          if(a == currentMax) {
+            currentMax++;
+            a++;
+          } else {
+            a++;
+          }
         } else {
-          c++;
+          b++;
         }
       } else {
-        b++;
+        c++;
       }
     } else {
-      a++;
+      d++;
+    }
+
+    // If no digit is currentmax, set lowest order digit to currentmax
+    if((a != currentMax) && (b != currentMax) && (c != currentMax) && (d != currentMax)) {
+      d = currentMax;
     }
 
     return(new long[] {a,b,c,d});
   }
 
   public boolean isDone() {
-    return(d == MAX);
+    return((d == MAX) && (c == MAX) && (b == MAX) && (a == MAX));
   }
 
 }
