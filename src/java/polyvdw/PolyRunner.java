@@ -9,14 +9,13 @@ import java.util.Arrays;
 
 public class PolyRunner {
 
-  static final long MAX = 200;
-  static final long PARAM_MAX = 1000;
+  static final long MAX = 1000;
+  static final long PARAM_MAX = 10000;
   static final long CHECK_MAX = 10000;
   static final String OUT_PATH = "/Users/zach/Documents/polyvdw/bounds.tex";
   static long[] min;
   static ArrayList<String> outputList;
   static int count;
-  static boolean next;
 
   public static void main(String[] args)  throws Exception {
     count = 0;
@@ -44,8 +43,6 @@ public class PolyRunner {
   public static void minBound(long a, long b, long max, long check_max) throws Exception {
     // Initialize output vars
     HashMap<Long, ArrayList<long[]>> triples = new HashMap<Long, ArrayList<long[]>>(30000);
-    ArrayList<long[]> kthrees = new ArrayList<long[]>();
-    next = false;
 
     QuadGenerator params = new QuadGenerator(max);
     DegreeTwoPoly poly = new DegreeTwoPoly(a,b);
@@ -70,17 +67,22 @@ public class PolyRunner {
           }
           if(poly.isNumber(poly.val(newTriple[1]) + poly.val(over[2]))) {
             // Found a new K3
-            kthrees = addNewKthree(kthrees, poly, newTriple, over);
-            if(next) { break ;}
+            // If it is a bound, move on
+            // TODO: the first bound found may not be the best one
+            if(newKthree(poly, newTriple, over)) {
+              finish(poly);
+              return;
+            }
           }
         }
         triples.get(ind).add(newTriple);
       }
-      if(next) {
-        System.out.println(Arrays.toString(p));
-        break;
-      }
     }
+    // No bound found
+    finish(poly);
+  }
+
+  public static void finish(DegreeTwoPoly poly) throws Exception {
     String output = poly.toString() + " : " + rowToString(min);
     System.out.println(output);
     if(!(min[3] == Long.MAX_VALUE)) {
@@ -94,35 +96,33 @@ public class PolyRunner {
     }
   }
 
-  public static ArrayList<long[]> addNewKthree(ArrayList<long[]> kthrees, DegreeTwoPoly poly, long[] newTriple, long[] over) throws Exception {
+  public static boolean newKthree(DegreeTwoPoly poly, long[] newTriple, long[] over) throws Exception {
     long[] newKthree = new long[] {newTriple[1], newTriple[2], poly.inv(poly.val(newTriple[1]) + poly.val(over[2]))};
-    kthrees.add(newKthree);
-    check(newKthree, poly);
+    boolean next = check(newKthree, poly);
     // And another one by symmetry
     newKthree = new long[] {over[1], over[2], poly.inv(poly.val(newTriple[1]) + poly.val(over[2]))};
-    kthrees.add(newKthree);
-    check(newKthree, poly);
-    return(kthrees);
+    return(next || check(newKthree, poly));
   }
 
   // Add to the largest value (@kthree[2])
   // Then check if other differences are also solutions to @poly
-  public static void check(long[] kthree, DegreeTwoPoly poly) {
+  public static boolean check(long[] kthree, DegreeTwoPoly poly) {
     for(int i = 1; i < CHECK_MAX; i++) {
       long w = poly.val(kthree[2]) + poly.val(i);
       if(poly.isNumber(w-poly.val(kthree[0])) && poly.isNumber(w-poly.val(kthree[1]))) {
         // New bound configuration; compare to previous smallest
-        minCandidate(new long[] {kthree[0], kthree[1], kthree[2], w});
-        return;
+        return(minCandidate(new long[] {kthree[0], kthree[1], kthree[2], w}));
       }
     }
+    return(false);
   }
 
-  public static void minCandidate(long[] kthreew) {
+  public static boolean minCandidate(long[] kthreew) {
     if(kthreew[3] < min[3]) {
       min = kthreew;
-      next = true;
+      return(true);
     }
+    return(false);
   }
 
   public static boolean doubleCheck(DegreeTwoPoly poly, long[] kthreew) {
