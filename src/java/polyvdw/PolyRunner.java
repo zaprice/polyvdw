@@ -13,7 +13,6 @@ public class PolyRunner {
   static final long PARAM_MAX = 10000;
   static final long CHECK_MAX = 10000;
   static final String OUT_PATH = "/Users/zach/Documents/polyvdw/bounds.tex";
-  static long[] min;
   static ArrayList<String> outputList;
   static int count;
 
@@ -29,7 +28,6 @@ public class PolyRunner {
         if(b % a == 0 && a != 1) {
           continue;
         }
-        min = new long[] {0, 0, 0, Long.MAX_VALUE};
         minBound(a, b, MAX, CHECK_MAX);
         if(count % 2 == 0 & count != 0) {
           outputList.add("\\pagebreak");
@@ -61,16 +59,17 @@ public class PolyRunner {
         triples.put(ind, tmp);
       } else {
         for(long[] over : triples.get(ind)) {
-          if(over[1] == newTriple[1]) {
-            // TODO: this should be break?
-            continue;
+          // Skip if this triple is already present
+          if((over[1] == newTriple[1]) && (over[2] == newTriple[2])) {
+            break;
           }
           if(poly.isNumber(poly.val(newTriple[1]) + poly.val(over[2]))) {
             // Found a new K3
             // If it is a bound, move on
             // TODO: the first bound found may not be the best one
-            if(newKthree(poly, newTriple, over)) {
-              finish(poly);
+            long[] bound = newKthree(poly, newTriple, over);
+            if(bound != null) {
+              finish(poly, bound);
               return;
             }
           }
@@ -79,55 +78,50 @@ public class PolyRunner {
       }
     }
     // No bound found
-    finish(poly);
+    finish(poly, null);
   }
 
-  public static void finish(DegreeTwoPoly poly) throws Exception {
-    String output = poly.toString() + " : " + rowToString(min);
+  public static void finish(DegreeTwoPoly poly, long[] bound) throws Exception {
+    String output = poly.toString() + " : " + rowToString(bound);
     System.out.println(output);
-    if(!(min[3] == Long.MAX_VALUE)) {
-      outputList.add("$ PW(4, " + poly.toString() + ") < " + poly.toBound(min[3]) + "$\n\\vspace{10pt}\n");
-      outputList.addAll(configToTikz(poly, min));
+    if(bound != null) {
+      outputList.add("$ PW(4, " + poly.toString() + ") < " + poly.toBound(bound[3]) + "$\n\\vspace{10pt}\n");
+      outputList.addAll(configToTikz(poly, bound));
       write(outputList, OUT_PATH);
       count++;
     }
-    if(!doubleCheck(poly, min)) {
+    if(!doubleCheck(poly, bound)) {
       throw new Exception("configuration does not work");
     }
   }
 
-  public static boolean newKthree(DegreeTwoPoly poly, long[] newTriple, long[] over) throws Exception {
+  public static long[] newKthree(DegreeTwoPoly poly, long[] newTriple, long[] over) throws Exception {
     long[] newKthree = new long[] {newTriple[1], newTriple[2], poly.inv(poly.val(newTriple[1]) + poly.val(over[2]))};
-    boolean next = check(newKthree, poly);
+    long[] bound = check(newKthree, poly);
+    if(bound != null) {
+      return(bound);
+    }
     // And another one by symmetry
     newKthree = new long[] {over[1], over[2], poly.inv(poly.val(newTriple[1]) + poly.val(over[2]))};
-    return(next || check(newKthree, poly));
+    return(check(newKthree, poly));
   }
 
   // Add to the largest value (@kthree[2])
   // Then check if other differences are also solutions to @poly
-  public static boolean check(long[] kthree, DegreeTwoPoly poly) {
+  public static long[] check(long[] kthree, DegreeTwoPoly poly) {
     for(int i = 1; i < CHECK_MAX; i++) {
       long w = poly.val(kthree[2]) + poly.val(i);
       if(poly.isNumber(w-poly.val(kthree[0])) && poly.isNumber(w-poly.val(kthree[1]))) {
         // New bound configuration; compare to previous smallest
-        return(minCandidate(new long[] {kthree[0], kthree[1], kthree[2], w}));
+        return(new long[] {kthree[0], kthree[1], kthree[2], w});
       }
     }
-    return(false);
-  }
-
-  public static boolean minCandidate(long[] kthreew) {
-    if(kthreew[3] < min[3]) {
-      min = kthreew;
-      return(true);
-    }
-    return(false);
+    return(null);
   }
 
   public static boolean doubleCheck(DegreeTwoPoly poly, long[] kthreew) {
     // Skip check if no candidate was found
-    if(kthreew[kthreew.length-1] == Long.MAX_VALUE) {
+    if(kthreew == null) {
       return(true);
     }
     for(int i = 0; i < kthreew.length-1; i++) {
