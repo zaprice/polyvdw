@@ -31,7 +31,7 @@ public class QuadGenerator {
           b = 1;
           if(a == currentMax) {
             currentMax++;
-            a++;
+            a = 1;
           } else {
             a++;
           }
