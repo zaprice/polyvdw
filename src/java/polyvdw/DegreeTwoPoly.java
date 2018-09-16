@@ -32,23 +32,23 @@ public class DegreeTwoPoly {
   }
 
   public String plugInValue(long x) {
-    String aa = (A == 1) ? "" : A + "*";
+    String aa = (A == 1) ? "" : commas(A) + "*";
     String bb = (B == 0) ? "" :
-    ( (B == 1) ? "+" + x : "+" + B + "*" + x);
-    return(aa + x + "^2" + bb);
+    ( (B == 1) ? "+" + x : "+" + commas(B) + "*" + x);
+    return(aa + commas(x) + "^2" + bb);
   }
 
   public String toString() {
-    String aa = (A == 1) ? "" : "" + A;
+    String aa = (A == 1) ? "" : commas(A);
     String bb = (B == 0) ? "" :
-    ( (B == 1) ? " + x" : " + " + B + "x");
+    ( (B == 1) ? " + x" : " + " + commas(B) + "x");
     return(aa + "x^2" + bb);
   }
 
   public String toBound(long w) {
-    String aa = (A == 1) ? "" : A + "*";
-    String bb = (B == 0) ? "" : "+" + B;
-    return("1+"+w+"("+aa+w+bb+") = " + (1+val(w)));
+    String aa = (A == 1) ? "" : commas(A) + "*";
+    String bb = (B == 0) ? "" : "+" + commas(B);
+    return("1+"+commas(w)+"("+aa+commas(w)+bb+") = " + (1+commas(val(w))));
   }
 
   public long[] triple(long[] params) {

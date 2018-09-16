@@ -62,4 +62,8 @@ public class VdwLib {
     }
     return(output);
   }
+
+  public static String commas(long input) {
+    return(String.format("%,d", input).replaceAll(",", "{,}"));
+  }
 }

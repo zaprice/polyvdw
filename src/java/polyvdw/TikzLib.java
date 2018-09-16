@@ -2,6 +2,7 @@
 package polyvdw;
 
 import java.util.ArrayList;
+import static polyvdw.VdwLib.*;
 
 public class TikzLib {
 
@@ -16,13 +17,13 @@ public class TikzLib {
     }
 
     // Begin graph, add 0 node
-    output.add("\\begin{tikzpicture}\n[scale=.8,auto=left]\n\n\\node [vertex] (n1) at (1,7) {0};\n");
+    output.add("\\begin{tikzpicture}\n[scale=.75,auto=left]\n\n\\node [vertex] (n1) at (1,7) {0};\n");
 
     // Add nodes for other numbers
-    output.add("\\node [vertex] (n2) at (7,13) {" + poly.val(kthreew[0]) + "};\n");
-    output.add("\\node [vertex] (n3) at (7,1) {" + poly.val(kthreew[1]) + "};\n");
-    output.add("\\node [vertex] (n4) at (13,7) {" + poly.val(kthreew[2]) + "};\n");
-    output.add("\\node [vertex] (n5) at (21,7) {" + kthreew[3] + "};\n");
+    output.add("\\node [vertex] (n2) at (7,13) {" + commas(poly.val(kthreew[0])) + "};\n");
+    output.add("\\node [vertex] (n3) at (7,1) {" + commas(poly.val(kthreew[1])) + "};\n");
+    output.add("\\node [vertex] (n4) at (13,7) {" + commas(poly.val(kthreew[2])) + "};\n");
+    output.add("\\node [vertex] (n5) at (21,7) {" + commas(kthreew[3]) + "};\n");
 
     for(int i = 0; i < kthreew.length-1; i++) {
       for(int j = i+1; j < kthreew.length-1; j++) {
