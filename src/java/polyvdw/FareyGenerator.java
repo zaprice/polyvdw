@@ -1,6 +1,8 @@
 
 package polyvdw;
 
+import java.util.Comparator;
+
 public class FareyGenerator {
 
   long[] fareyArgs;
@@ -25,4 +27,26 @@ public class FareyGenerator {
   public boolean isDone() {
     return(fareyArgs[5] == 1);
   }
+}
+
+// Lexical sort comparator for FareyGenerator outputs (pairs)
+class LexicalComparator implements Comparator<long[]> {
+
+  @Override
+  public int compare(long[] one, long[] two) {
+    if(one[0] < two[0]) {
+      return(-1);
+    } else if(one[0] > two[0]) {
+      return(1);
+    } else {
+      if(one[1] < two[1]) {
+        return(-1);
+      } else if(one[1] > two[1]) {
+        return(1);
+      } else {
+        return(0);
+      }
+    }
+  }
+
 }
