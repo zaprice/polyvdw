@@ -7,6 +7,7 @@ import java.util.ArrayList;
 public class QuadGenerator {
 
   long MAX;
+  long currentMax;
   HashMap<Long, ArrayList<long[]>> factors;
   long a;
   long d;
@@ -14,9 +15,10 @@ public class QuadGenerator {
   ArrayList<long[]> currentFactors;
 
 
-  public QuadGenerator(long MAX) {
+  public QuadGenerator(long MAX, HashMap<Long, ArrayList<long[]>> factors) {
     this.MAX = MAX;
-    factors = initFactors(MAX);
+    currentMax = 2;
+    this.factors = factors;
     a = 0;
     d = 1;
     // Setup for the first loop iteration
@@ -32,12 +34,7 @@ public class QuadGenerator {
       return(quad);
     } else {
       // Otherwise, move on!
-      if(d == MAX) {
-        d = 1;
-        a++;
-      } else {
-        d++;
-      }
+      nextPair();
       currentFactors = factors.get(a*d+1);
       index = 0;
       long[] quad = new long[] {a, currentFactors.get(index)[0], currentFactors.get(index)[1], d};
@@ -49,7 +46,27 @@ public class QuadGenerator {
     return((d == MAX) && (a == MAX));
   }
 
-  public HashMap<Long, ArrayList<long[]>> initFactors(long max) {
+  public void nextPair() {
+    if(d == currentMax) {
+      d = 1;
+      if(a == currentMax) {
+        currentMax++;
+        a = 1;
+        d = currentMax;
+      } else {
+        a++;
+      }
+    } else {
+      d++;
+    }
+
+    // If no digit is currentmax, set lowest order digit to currentmax
+    if((a != currentMax) && (d != currentMax)) {
+      d = currentMax;
+    }
+  }
+
+  public static HashMap<Long, ArrayList<long[]>> initFactors(long max) {
     HashMap<Long, ArrayList<long[]>> factors = new HashMap<Long, ArrayList<long[]>>((int)max*2);
     // max*max+1 because a,d range up to MAX and we want to pull ad+1 from the hash
     for(long i = 1; i <= max*max+1; i++) {

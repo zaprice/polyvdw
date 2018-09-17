@@ -20,6 +20,8 @@ public class PolyRunner {
     count = 0;
     outputList = new ArrayList<String>();
     outputList.add(TikzLib.preamble);
+    // Init factors once to save time
+    HashMap<Long, ArrayList<long[]>> factors = QuadGenerator.initFactors(MAX);
     for(long a = 1; a <= PARAM_MAX; a++) {
       for(long b = 0; b <= PARAM_MAX; b++) {
         // Skip iterations if they are a multiple of (1, n)
@@ -28,7 +30,7 @@ public class PolyRunner {
         if(b % a == 0 && a != 1) {
           continue;
         }
-        minBound(a, b, MAX, CHECK_MAX);
+        minBound(a, b, MAX, CHECK_MAX, factors);
         if(count % 2 == 0 & count != 0) {
           outputList.add("\\pagebreak");
         }
@@ -38,11 +40,11 @@ public class PolyRunner {
     write(outputList, OUT_PATH);
   }
 
-  public static void minBound(long a, long b, long max, long check_max) throws Exception {
+  public static void minBound(long a, long b, long max, long check_max, HashMap<Long, ArrayList<long[]>> factors) throws Exception {
     // Initialize output vars
     HashMap<Long, ArrayList<long[]>> triples = new HashMap<Long, ArrayList<long[]>>(30000);
 
-    QuadGenerator params = new QuadGenerator(max);
+    QuadGenerator params = new QuadGenerator(max, factors);
     DegreeTwoPoly poly = new DegreeTwoPoly(a,b);
 
     while(!params.isDone()) {
