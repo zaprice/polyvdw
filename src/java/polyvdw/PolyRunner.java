@@ -10,7 +10,7 @@ import java.util.Arrays;
 public class PolyRunner {
 
   static final long MAX = 1000;
-  static final long PARAM_MAX = 10000;
+  static final long PARAM_MAX = 100;
   static final long CHECK_MAX = 10000;
   static final String OUT_PATH = "/Users/zach/Documents/polyvdw/bounds.tex";
   static ArrayList<String> outputList;
@@ -21,7 +21,7 @@ public class PolyRunner {
     outputList = new ArrayList<String>();
     outputList.add(TikzLib.preamble);
     // Init factors once to save time
-    HashMap<Long, ArrayList<long[]>> factors = QuadGenerator.initFactors(MAX);
+    HashMap<Long, ArrayList<long[]>> factors = QuadGenerator.initFactors(MAX, PARAM_MAX);
     for(long a = 1; a <= PARAM_MAX; a++) {
       for(long b = 0; b <= PARAM_MAX; b++) {
         // Skip iterations if they are a multiple of (1, n)
@@ -44,7 +44,7 @@ public class PolyRunner {
     // Initialize output vars
     HashMap<Long, ArrayList<long[]>> triples = new HashMap<Long, ArrayList<long[]>>(30000);
 
-    QuadGenerator params = new QuadGenerator(max, factors);
+    QuadGenerator params = new QuadGenerator(b, max, factors);
     DegreeTwoPoly poly = new DegreeTwoPoly(a,b);
 
     while(!params.isDone()) {

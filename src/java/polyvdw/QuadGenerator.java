@@ -13,13 +13,18 @@ public class QuadGenerator {
   long d;
   int index;
   ArrayList<long[]> currentFactors;
+  long B;
 
 
-  public QuadGenerator(long MAX, HashMap<Long, ArrayList<long[]>> factors) {
+  public QuadGenerator(long B, long MAX, HashMap<Long, ArrayList<long[]>> factors) {
     this.MAX = MAX;
     currentMax = 2;
     this.factors = factors;
-    a = 0;
+    // Param from the polynomial
+    // Determine what number we're factoring
+    this.B = B;
+    // To deal with the case where we try to factorize 0*1 + 0
+    a = (B == 0) ? 1 : 0;
     d = 1;
     // Setup for the first loop iteration
     index = Integer.MAX_VALUE-1;
@@ -27,7 +32,7 @@ public class QuadGenerator {
   }
 
   public long[] nextQuad() {
-    // If there are more factorizations of the current ad+1, try them
+    // If there are more factorizations of the current ad+B, try them
     if(currentFactors.size() > index+1) {
       index++;
       long[] quad = new long[] {a, currentFactors.get(index)[0], currentFactors.get(index)[1], d};
@@ -35,7 +40,7 @@ public class QuadGenerator {
     } else {
       // Otherwise, move on!
       nextPair();
-      currentFactors = factors.get(a*d+1);
+      currentFactors = factors.get(a*d+B);
       index = 0;
       long[] quad = new long[] {a, currentFactors.get(index)[0], currentFactors.get(index)[1], d};
       return(quad);
@@ -66,11 +71,11 @@ public class QuadGenerator {
     }
   }
 
-  public static HashMap<Long, ArrayList<long[]>> initFactors(long max) {
+  public static HashMap<Long, ArrayList<long[]>> initFactors(long max, long maxB) {
     HashMap<Long, ArrayList<long[]>> factors = new HashMap<Long, ArrayList<long[]>>((int)max*2);
-    // max*max+1 because a,d range up to MAX and we want to pull ad+1 from the hash
-    for(long i = 1; i <= max*max+1; i++) {
-      for(long j = i; j <= max*max+1; j++) {
+    // max*max+B because a,d range up to MAX and we want to pull ad+B from the hash
+    for(long i = 1; i <= max*max+maxB; i++) {
+      for(long j = i; j <= ((max*max+maxB)/i)+1; j++) {
         if(!factors.containsKey(i*j)) {
           ArrayList<long[]> tmp = new ArrayList<long[]>();
           tmp.add(new long[] {i, j});
