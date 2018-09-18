@@ -34,7 +34,7 @@ public class DegreeTwoPoly {
   public String plugInValue(long x) {
     String aa = (A == 1) ? "" : commas(A) + "*";
     String bb = (B == 0) ? "" :
-    ( (B == 1) ? "+" + x : "+" + commas(B) + "*" + x);
+    ( (B == 1) ? "+" + commas(x) : "+" + commas(B) + "*" + commas(x));
     return(aa + commas(x) + "^2" + bb);
   }
 
