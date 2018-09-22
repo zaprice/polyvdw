@@ -48,7 +48,7 @@ public class DegreeTwoPoly {
   public String toBound(long w) {
     String aa = (A == 1) ? "" : commas(A) + "*";
     String bb = (B == 0) ? "" : "+" + commas(B);
-    return("1+"+commas(w)+"("+aa+commas(w)+bb+") = " + (1+commas(val(w))));
+    return("1+"+commas(w)+"("+aa+commas(w)+bb+") = " + (commas(val(w)+1)));
   }
 
   public long[] triple(long[] params) {
