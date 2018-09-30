@@ -20,8 +20,7 @@ public class FareyGenerator {
     fareyArgs[1] = fareyArgs[3];
     fareyArgs[2] = fareyArgs[4];
     fareyArgs[3] = fareyArgs[5];
-
-    return(new long[] {fareyArgs[4], fareyArgs[5]});
+    return(new long[] {fareyArgs[0], fareyArgs[1]});
   }
 
   public boolean isDone() {

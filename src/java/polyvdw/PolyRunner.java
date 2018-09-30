@@ -9,8 +9,10 @@ import java.util.Arrays;
 
 public class PolyRunner {
 
-  static final long MAX = 1000;
-  static final long PARAM_MAX = 10000;
+  // As big as it gets without overflowing
+  // TODO: switch to BigInteger?
+  static final long MAX = 1577;
+  static final long PARAM_MAX = 100;
   static final long CHECK_MAX = 10000;
   static final String OUT_PATH = "/Users/zach/Documents/polyvdw/bounds.tex";
   static ArrayList<String> outputList;
@@ -20,29 +22,25 @@ public class PolyRunner {
     count = 0;
     outputList = new ArrayList<String>();
     outputList.add(TikzLib.preamble);
-    for(long a = 1; a <= PARAM_MAX; a++) {
-      for(long b = 0; b <= PARAM_MAX; b++) {
-        // Skip iterations if they are a multiple of (1, n)
-        // TODO: skip if they are multiples of any previous iteration
-        // TODO: algorithm does not find bounds for (a,b) with a > 1, a does not divide b
-        if(b % a == 0 && a != 1) {
-          continue;
-        }
-        minBound(a, b, MAX, CHECK_MAX);
-        if(count % 2 == 0 & count != 0) {
-          outputList.add("\\pagebreak");
-        }
+    // Init factors once to save time
+    HashMap<Long, ArrayList<long[]>> factors = FactoringQuadGenerator.initFactors(MAX, PARAM_MAX);
+
+    ArrayList<long[]> params = getParams(PARAM_MAX);
+    for(long[] p : params) {
+      minBound(p[0], p[1], MAX, CHECK_MAX, factors);
+      if(count % 2 == 0 & count != 0) {
+        outputList.add("\\pagebreak");
       }
     }
     outputList.add(TikzLib.end);
     write(outputList, OUT_PATH);
   }
 
-  public static void minBound(long a, long b, long max, long check_max) throws Exception {
+  public static void minBound(long a, long b, long max, long check_max, HashMap<Long, ArrayList<long[]>> factors) throws Exception {
     // Initialize output vars
     HashMap<Long, ArrayList<long[]>> triples = new HashMap<Long, ArrayList<long[]>>(30000);
 
-    QuadGenerator params = new QuadGenerator(max);
+    FactoringQuadGenerator params = new FactoringQuadGenerator(b, max, factors);
     DegreeTwoPoly poly = new DegreeTwoPoly(a,b);
 
     while(!params.isDone()) {
@@ -137,4 +135,5 @@ public class PolyRunner {
     }
     return(true);
   }
+
 }

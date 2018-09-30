@@ -66,4 +66,22 @@ public class VdwLib {
   public static String commas(long input) {
     return(String.format("%,d", input).replaceAll(",", "{,}"));
   }
+
+  public static ArrayList<long[]> getParams(long max) {
+    // Using the Farey sequence so we only compute bounds for Ax^2+Bx that are not multiples of previous bounds
+    FareyGenerator paramsGen = new FareyGenerator(max);
+    ArrayList<long[]> params = new ArrayList<long[]>((int)max);
+    while(!paramsGen.isDone()) {
+      long[] t = paramsGen.nextFarey();
+      params.add(t);
+    }
+    // Need to add (n,1)
+    for(long i = 1; i <= max; i++) {
+      params.add(new long[] {i, 1});
+    }
+    params.add(new long[] {1, 0});
+    params.sort(new LexicalComparator());
+    return(params);
+  }
+
 }
