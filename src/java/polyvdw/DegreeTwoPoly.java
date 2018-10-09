@@ -20,7 +20,7 @@ public class DegreeTwoPoly {
   // Check if @y is p(x) for some integer x
   public boolean isNumber(long y) {
     double inv = (-B + Math.sqrt(sq(B)+4*A*y))/(2.0*A);
-    return(Math.floor(inv) == Math.ceil(inv));
+    return((Math.floor(inv) == Math.ceil(inv)) && (val((long)Math.floor(inv)) == y) );
   }
 
   public long inv(long y) throws Exception {

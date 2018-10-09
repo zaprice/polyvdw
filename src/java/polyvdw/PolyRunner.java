@@ -4,7 +4,7 @@ package polyvdw;
 import java.util.HashMap;
 import java.util.ArrayList;
 import static polyvdw.VdwLib.*;
-import static polyvdw.TikzLib.*;
+import static polyvdw.TableLib.*;
 import java.util.Arrays;
 
 public class PolyRunner {
@@ -12,7 +12,7 @@ public class PolyRunner {
   // As big as it gets without overflowing
   // TODO: switch to BigInteger?
   static final long MAX = 1577;
-  static final long PARAM_MAX = 100;
+  static final long PARAM_MAX = 2000;
   static final long CHECK_MAX = 10000;
   static final String OUT_PATH = "/Users/zach/Documents/polyvdw/bounds.tex";
   static ArrayList<String> outputList;
@@ -21,18 +21,18 @@ public class PolyRunner {
   public static void main(String[] args)  throws Exception {
     count = 0;
     outputList = new ArrayList<String>();
-    outputList.add(TikzLib.preamble);
+    outputList.add(TableLib.preamble);
     // Init factors once to save time
     HashMap<Long, ArrayList<long[]>> factors = FactoringQuadGenerator.initFactors(MAX, PARAM_MAX);
 
     ArrayList<long[]> params = getParams(PARAM_MAX);
     for(long[] p : params) {
       minBound(p[0], p[1], MAX, CHECK_MAX, factors);
-      if(count % 2 == 0 & count != 0) {
-        outputList.add("\\pagebreak");
+      if(count % 53 == 0 & count != 0) {
+        outputList.add(TableLib.newPage);
       }
     }
-    outputList.add(TikzLib.end);
+    outputList.add(TableLib.end);
     write(outputList, OUT_PATH);
   }
 
@@ -83,8 +83,7 @@ public class PolyRunner {
     String output = poly.toString() + " : " + rowToString(bound);
     System.out.println(output);
     if(bound != null) {
-      outputList.add("$ PW(4, " + poly.toString() + ") < " + poly.toBound(bound[3]) + "$\n\\vspace{10pt}\n");
-      outputList.addAll(configToTikz(poly, bound));
+      outputList.addAll(configToTable(poly, bound));
       write(outputList, OUT_PATH);
       count++;
     }
@@ -109,6 +108,10 @@ public class PolyRunner {
   public static long[] check(long[] kthree, DegreeTwoPoly poly) {
     for(int i = 1; i < CHECK_MAX; i++) {
       long w = poly.val(kthree[2]) + poly.val(i);
+      // Make sure w is not large enough to roll over
+      if(poly.val(w) < 0) {
+        return(null);
+      }
       if(poly.isNumber(w-poly.val(kthree[0])) && poly.isNumber(w-poly.val(kthree[1]))) {
         // New bound configuration; compare to previous smallest
         return(new long[] {kthree[0], kthree[1], kthree[2], w});
