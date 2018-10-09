@@ -7,9 +7,9 @@ import static polyvdw.VdwLib.*;
 public class TableLib {
 
   public static final String preamble = "\\documentclass{article}\n\n\\usepackage[margin=.7in]{geometry}\n\n\\begin{document}\n\n\\begin{center}\\begin{tabular}{ | c | r | r | r | r | r | }\n\\hline\n\n"
-  + "$g$ & $x$ & $y$ & $z$ & $w$ & $PW(4, \{g\}) <$ \\\\ \\hline";
+  + "$g$ & $x$ & $y$ & $z$ & $w$ & $PW(4, \\{g\\}) <$ \\\\ \\hline";
   public static final String newPage = "\n\\end{tabular}\\pagebreak\n\n\\begin{tabular}{ | c | r | r | r | r | r | }\n\\hline\n\n"
-  + "$g$ & $x$ & $y$ & $z$ & $w$ & $PW(4, \{g\}) <$ \\\\ \\hline";
+  + "$g$ & $x$ & $y$ & $z$ & $w$ & $PW(4, \\{g\\}) <$ \\\\ \\hline";
   public static final String end = "\n\\hline\n\\end{tabular}\n\\end{center}\\end{document}";
 
   public static ArrayList<String> configToTable(DegreeTwoPoly poly, long[] kthreew) {
