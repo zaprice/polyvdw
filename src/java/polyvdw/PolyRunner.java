@@ -39,6 +39,7 @@ public class PolyRunner {
   public static void minBound(long a, long b, long max, long check_max, HashMap<Long, ArrayList<long[]>> factors) throws Exception {
     // Initialize output vars
     HashMap<Long, ArrayList<long[]>> triples = new HashMap<Long, ArrayList<long[]>>(30000);
+    long[] min = new long[] {0, 0, 0, Long.MAX_VALUE};
 
     FactoringQuadGenerator params = new FactoringQuadGenerator(b, max, factors);
     DegreeTwoPoly poly = new DegreeTwoPoly(a,b);
@@ -56,6 +57,7 @@ public class PolyRunner {
         tmp.add(newTriple);
         triples.put(ind, tmp);
       } else {
+        triples.get(ind).add(newTriple);
         for(long[] over : triples.get(ind)) {
           // Skip if this triple is already present
           if((over[1] == newTriple[1]) && (over[2] == newTriple[2])) {
@@ -64,19 +66,20 @@ public class PolyRunner {
           if(poly.isNumber(poly.val(newTriple[1]) + poly.val(over[2]))) {
             // Found a new K3
             // If it is a bound, move on
-            // TODO: the first bound found may not be the best one
             long[] bound = newKthree(poly, newTriple, over);
-            if(bound != null) {
-              finish(poly, bound);
-              return;
+            if(bound != null && bound[3] < min[3]) {
+              min = bound;
             }
           }
         }
-        triples.get(ind).add(newTriple);
       }
     }
-    // No bound found
-    finish(poly, null);
+    if(min[3] == Long.MAX_VALUE) {
+      // No bound found
+      finish(poly, null);
+    } else {
+      finish(poly, min);
+    }
   }
 
   public static void finish(DegreeTwoPoly poly, long[] bound) throws Exception {
