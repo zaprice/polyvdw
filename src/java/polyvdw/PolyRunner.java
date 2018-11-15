@@ -28,9 +28,6 @@ public class PolyRunner {
     ArrayList<long[]> params = getParams(PARAM_MAX);
     for(long[] p : params) {
       minBound(p[0], p[1], MAX, CHECK_MAX, factors);
-      if(count % 53 == 0 & count != 0) {
-        outputList.add(TableLib.newPage);
-      }
     }
     outputList.add(TableLib.end);
     write(outputList, OUT_PATH);
