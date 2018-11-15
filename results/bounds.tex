@@ -1,19 +1,230 @@
-\documentclass{article}
 
-\usepackage[margin=.7in]{geometry}
+\documentclass[a4paper]{amsproc}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+%%\usepackage[margin=.7in]{geometry}
+%%\usepackage[hyphens]{url} \urlstyle{same}
 \usepackage{tikz}
+\usepackage{longtable}
+
+%%\setlength{\textwidth}{28cc} \setlength{\textheight}{42cc}
+
+\theoremstyle{plain}
+\newtheorem{thm}{Theorem}[section]
+%%\setlength{\parindent}{0pt}
+
+\newcommand{\RR} {\color{red} R}
+\newcommand{\BB} {\color{blue} B}
+\newcommand{\GG} {\color{green} G}
+\newcommand{\YY} {\color{yellow} Y}
+\newcommand{\N} {\mathbb{N}}
+
+\title{Elementary Upper Bounds for Polynomial van der Waerden Numbers}
+\author[Price]{Zachary Price}
+\subjclass[2010]{Primary 05D10; Secondary 11Y50}
+\keywords{polynomial van der Waerden; Ramsey theory; computational combinatorics; Diophantine equations}
+\thanks{Advised by William Gasarch, University of Maryland}
+\email{zprice11@gmail.com}
+\date{\today}
 
 \begin{document}
 
+
 \tikzstyle{vertex} = [circle,draw,fill=white!20]
+
+\vspace{18mm} \setcounter{page}{1} \thispagestyle{empty}
+
+\begin{abstract}
+TODO: abstract, cite Hilbert's 10th; Farey
+\end{abstract}
+
+\maketitle
+
+\section{Background}
+
+First, we state the standard and polynomial versions of van der Waerden's theorem.
+
+\begin{thm}
+  For any positive integers $c,k$ there is some number $N=W(c,k)$ such that if the integers $\{1,\ldots,N\}$ are $c$-colored, then there must be $k$ integers in arithmetic progression that are the same color.
+\end{thm}
+
+This is a classic Ramsey-type theorem: if you color $\{1,\ldots,N\}$, there is no way to avoid creating some monochromatic structure (for large enough $N$), in this case an arithmetic progression of length $k$.
+Starting with a progression like $\{a_0, a_0+r, a_0+2r,\ldots, a_0+kr\}$ where the difference between each term is the constant $r$, we can generalize by replacing that constant with a set of $k$ functions.
+We take some fixed $d$ and consider polynomials $\{p_1,\ldots,p_k\}$ with all $p_i(0)=0$; our new "progression" is $\{a_0, a_0+p_1(d), a_0+p_2(d),\ldots, a_0+p_k(d)\}$.
+This leads to the statement of the polynomial van der Waerden theorem:
+
+\begin{thm}
+  For any positive integers $c,k$ and a set $\{p_1,\ldots,p_k\}$ of polynomials with $p_i(0)=0$, there exists some number $N=PW(c,\{p_1,\ldots,p_k\})$ such that any $c$-coloring of $\{1,\ldots,N\}$ has a monochromatic subset $\{a_0, a_0+p_1(d), a_0+p_2(d),\ldots, a_0+p_k(d)\}$ for some $d$.
+\end{thm}
+
+This generalizes the standard theorem as the previous arithmetic progression has polynomials $p_i(x) = ix$ and $d=r$.
+The bounds you get on $W(c,k)$ and $PW(c,\{p_1,\ldots,p_k\})$ from proving these theorems are very large; computing exact values is intractable and bounds can be computationally expensive to even verify.
+As such, it's an interesting exercise to see if we can improve the bounds on $PW$ by some method which is checkable in an elementary way.
+
+
+We begin with the simplest case; bounding the value of $PW(2,\{x^2\})$ is equivalent to asking for the smallest $N$ where any $2$-coloring of $\{1,\ldots,N\}$ must have two numbers the same color that are a square apart.
+This case is easy to solve by inspection.
+Without loss of generality we say $1$ is $\RR$.
+$2$ must be $\BB$ as $2-1$ is a square, and so $3$ is $\RR$ and so on.
+\[\begin{matrix}1&2&3&4&5&\ldots\\\\\RR&\BB&\RR&\BB&\RR&\ldots\end{matrix}\]
+However, $5-1=2^2$ but both are $\RR$.
+Thus, $PW(2,\{x^2\})\leq 5$ and this bound is tight as there is only one possible $2$-coloring (up to symmetry).
+
+For $c=3$, it gets more complicated.
+Taking $1$ as $\RR$, any $n^2+1$ must be $\BB$ or $\GG$.
+A configuration of $a,b$ where $(a^2+1)-(b^2+1)=c^2$ would result in $1, a^2+1, b^2+1$ all different colors.
+This is just a Pythagorean triple; using $(3,4,5)$ gives us:
+
+\begin{figure}[htb]
+\begin{tikzpicture}
+[scale=.8,auto=left]
+
+\node [vertex, draw=red] (n1) at (1,4) {1};
+\node [vertex, draw=blue] (n2) at (5,7) {17};
+\node [vertex, draw=green] (n3) at (5,1) {26};
+\node [vertex, draw=red] (n4) at (9,4) {42};
+
+\draw [{sloped,anchor=south,auto=false}] (n1) -- node {$16 = 4^2$}(n2);
+\draw [{sloped,anchor=south,auto=false}] (n1) -- node {$25 = 5^2$}(n3);
+\draw (n2) -- node [pos=0.35] {$9 = 3^2$}(n3);
+\draw [{sloped,anchor=south,auto=false}] (n2) -- node {$25 = 5^2$}(n4);
+\draw [{sloped,anchor=south,auto=false}] (n3) -- node {$16 = 4^2$}(n4);
+
+\end{tikzpicture}
+\end{figure}
+
+By symmetry, we know that 42 must also be $\RR$.
+And we can iterate this construction! $42+4^2$ and $42+5^2$ must be either $\BB$ or $\GG$, and $42+4^2+5^2=1+2\cdot41$ must be $\RR$.
+All $1+i\cdot41$ are $\RR$, so $1+41^2$ is the same color as $1$, providing a bound of $PW(3, \{x^2\})\leq 1+41^2$.
+
+\section{Methods}
+
+We write our $\N$-colorings starting at $0$ for simplicity.
+
+For the 3-color case, we built a $K_3$ with different colored vertices using a Pythagorean triple;
+then we found an integer a square away from the $\BB$ and $\GG$ vertices, which must be $\RR$.
+Essentially, we solved this system of Diophantine equations:
+
+$$
+\begin{matrix}
+x^2 + a^2 = y^2 \\
+x^2 + b^2 = w \\
+y^2 + c^2 = w
+\end{matrix}
+$$
+
+We iterated this construction to obtain the square $w^2$ which must be $\RR$, completing the proof.
+To generalize this method to four colors, we need a $K_4$ colored $\RR\BB\GG\YY$ and another $w$ which must be $\RR$, as in:
+
+\pagebreak
+\begin{figure}[Htb]
+\begin{tikzpicture}
+[scale=.4,auto=left]
+
+\node [vertex, draw=red] (n1) at (1,7) {0};
+\node [vertex, draw=blue] (n2) at (7,13) {$x^2$};
+\node [vertex, draw=green] (n3) at (7,1) {$y^2$};
+\node [vertex, draw=yellow] (n4) at (13,7) {$z^2$};
+\node [vertex, draw=red] (n5) at (21,7) {$w$};
+
+\draw [{sloped,anchor=south,auto=false}] (n1) -- node {$x^2$}(n2);
+\draw [{sloped,anchor=south,auto=false}] (n1) -- node {$y^2$}(n3);
+\draw [{sloped,anchor=south,auto=false}] (n1) -- node [near start] {$z^2$}(n4);
+\draw (n2) -- node [pos=0.35] {$a^2$}(n3);
+\draw [{sloped,anchor=south,auto=false}] (n2) -- node {$b^2$}(n4);
+\draw [{sloped,anchor=south,auto=false}] (n2) -- node [near end]{$d^2$}(n5);
+\draw [{sloped,anchor=south,auto=false}] (n3) -- node {$c^2$}(n4);
+\draw [{sloped,anchor=south,auto=false}] (n3) -- node [near end]{$e^2$}(n5);
+\draw [{sloped,anchor=south,auto=false}] (n4) -- node {$f^2$}(n5);
+
+\end{tikzpicture}
+\end{figure}
+
+Or as a system:
+
+$$
+\begin{matrix}
+x^2 + a^2 = y^2 \\
+x^2 + b^2 = z^2 \\
+y^2 + c^2 = z^2 \\
+x^2 + d^2 = w \\
+y^2 + e^2 = w \\
+z^2 + f^2 = w
+\end{matrix}
+$$
+
+I've taken to calling $(x,y,z)$ a \textit{Pythagorean $K_3$} as a generalization of the Pythagorean triple --
+rather than two squares with a square difference, we have three squares with square pairwise differences.
+Note that $(a,b,c)$ is a Pythagorean $K_3$ as well.
+
+It was shown (cite) in 1970 that there is no decision procedure for the solvability of arbitrary Diophantine equations, so solving this system is going to be more difficult than making a library call.
+However, we can make some simplifications so our search is not strictly brute-force.
+
+Each equation in the first block is a Pythagorean triple, for which we have a known formula with parameters $k,m,n$ where $m > n$, and $m,n$ are coprime but not both odd.
+From here, we can use the Farey sequence as an efficient algorithm to generate coprime pairs $m,n$.
+Then, we check if our triples overlap to form a $K_3$, and from there check if that $K_3$ has some $w$ satisfying the constraints.
+One important observation is that a triple $(x,y,z)$ is part of a $K_3$ precisely when the smallest difference $a^2 = y^2 - x^2$ is part of another
+triple $(a,b,c)$.
+
+We'll generalize the algorithm from the last post to $PW(4, \{x^2+x\})$ and try to go further to all quadratics $ax^2+bx$.
+
+To use the same algorithm, we need a parameterization of integer solutions to $x^2+x + y^2+y = z^2+z$,
+similar to Euclid's formula for Pythagorean triples.
+First, we use the quadratic formula to express $z$ in terms of $x$ and $y$.
+
+$$z = f(x,y) = \frac{-1+\sqrt{4x(x+1)+4y(y+1)+1}}{2}$$
+
+This equality holds in general, but we only want values with $z\in\N$.
+
+$z$ is an integer \textit{iff} $\ 4x(x+1)+4y(y+1)=(2z+1)^2$ is an odd square.
+This can be factored into $(2x+1)^2+(2y+1)^2=(2z+1)^2+1$, or $m^2+n^2=k^2+1$ with $m,n,k$ odd --
+like an "almost" Pythagorean triple.
+
+A parameterization of $m^2+n^2=k^2+1$ would imply one for $(x,y,z)$, and luckily this equation is easier.
+Using the \textit{Bramagupta-Fibonacci identity} with $bc-ad=1$, we get:
+
+$$(ac-bd)^2 + (ad+bc)^2 = (ac+bd)^2 + 1$$
+
+So, with parameters $a,b,c,d$ and constraints $bc-ad=1$, $ac-bd> 1$, $2\vert ac-bd-1, ad+bc-1$, we have:
+
+$$x = \frac{ac-bd-1}{2},\ y = \frac{ad+bc-1}{2},\ z = \frac{ac+bd-1}{2}$$
+
+Like last time, we generate quadruples $(a,b,c,d)$ and discard ones that don't fit the constraints.
+We use them to find triples that overlap in a $K_3$, and finally see if some $K_3$ admits a $w$ that solves the system.
+
+Can we generalize even further to $Ax^2+Bx$? Sure!
+Skipping a few steps, we get $(2Ax+B)^2 + (2Ay+B)^2 = (2Az+B)^2 + B^2$.
+We can parameterize it like before as,
+
+$$x = \frac{ac-bd-B}{2A},\ y = \frac{ad+bc-B}{2A},\ z = \frac{ac+bd-B}{2A}$$
+
+with a similar set of constraints:
+
+$$bc-ad=B,\ ac-bd> B,\ 2A\vert ac-bd-B, ad+bc-B$$
+
+We can make improvements to the parameter search, too.
+Rather than searching all $(a,b,c,d)$, we could eliminate parts of the parameter space that we know do not contain solutions.
+With fixed $a$ and $d$, the first constraint implies that $bc$ is some factorization of $ad + B$.
+We can pre-compute a table of factorizations and use that to cut the search space down to basically $n^2$.
+You can see the code for this on GitHub (link)!
+
+We can find bounds for nearly any $PW(4,x^2+Bx)$ with this method,
+but I've only found a few bounds for the more general $Ax^2+Bx$ case;
+if such configurations exist, it seems the numbers involved are much larger.
+In addition, we can apply a simpler version of this algorithm to $PW(3,Ax^2+Bx)$,
+which produces bounds for nearly any $A, B$.
+
+\section{Results}
 
 Configurations and bounds are given in the following table by $(g,x,y,z,w)$, where the polynomial Van der Waerden number
 $PW(4, \{g\})$ is bounded above by $g(w)+1$ when $x,y,z,w$ form the following configuration:
 
-\vspace{10pt}
+\begin{figure}[htb]
 \begin{center}
 \begin{tikzpicture}
-[scale=.4,auto=left]
+[scale=.5,auto=left]
 
 \node [vertex, draw=red] (n1) at (1,7) {0};
 \node [vertex, draw=blue] (n2) at (7,13) {$g(x)$};
@@ -34,15 +245,19 @@ $PW(4, \{g\})$ is bounded above by $g(w)+1$ when $x,y,z,w$ form the following co
 \end{tikzpicture}
 \end{center}
 
+\caption{M1} \label{fig:M1}
+\end{figure}
+
+We say such a configuration is \textit{elementary} because it is easily verified despite the fact that generating it may have involved arbitrarily complex computation.
 As an example, where $g(x)=x^2$,
 
-\vspace{10pt}
+%%\vspace{10pt}
 $ PW(4, x^2) < 1+290{,}085{,}289\times 290{,}085{,}289 = 84{,}149{,}474{,}894{,}213{,}522$
-\vspace{10pt}
+%%\vspace{10pt}
 
 \begin{center}
 \begin{tikzpicture}
-[scale=.75,auto=left]
+[scale=.7,auto=left]
 
 \node [vertex] (n1) at (1,7) {0};
 
@@ -73,14 +288,20 @@ $ PW(4, x^2) < 1+290{,}085{,}289\times 290{,}085{,}289 = 84{,}149{,}474{,}894{,}
 \draw [{sloped,anchor=south,auto=false}] (n4) -- node {$5{,}460^2$}(n5);
 
 \end{tikzpicture}
-\vspace{10pt}
+%%\vspace{10pt}
 
 \end{center}
 
-\begin{center}\begin{tabular}{ | c | r | r | r | r | r | }
+\begin{longtable}{ | l | r | r | r | r | r | }
 \hline
 
-$g$ & $x$ & $y$ & $z$ & $w$ & $PW(4, \{g\}) <$ \\ \hline
+\multicolumn{1}{|c|}{$g$} &
+\multicolumn{1}{|c|}{$x$} &
+\multicolumn{1}{|c|}{$y$} &
+\multicolumn{1}{|c|}{$z$} &
+\multicolumn{1}{|c|}{$w$} &
+\multicolumn{1}{|c|}{$PW(4, \{g\}) <$} \\ \hline
+\endhead
 $x^2$ & 10{,}608 & 13{,}108 & 16{,}133 & 290{,}085{,}289 & 84{,}149{,}474{,}894{,}213{,}522 \\ \hline
 $x^2 + x$ & 299 & 302 & 327 & 113{,}262 & 12{,}828{,}393{,}907 \\ \hline
 $x^2 + 2x$ & 91 & 127 & 211 & 257{,}463 & 66{,}287{,}711{,}296 \\ \hline
@@ -134,13 +355,6 @@ $x^2 + 49x$ & 154 & 217 & 319 & 130{,}834 & 17{,}123{,}946{,}423 \\ \hline
 $x^2 + 50x$ & 34 & 40 & 84 & 37{,}200 & 1{,}385{,}700{,}001 \\ \hline
 $x^2 + 51x$ & 119 & 154 & 289 & 248{,}542 & 61{,}785{,}801{,}407 \\ \hline
 $x^2 + 52x$ & 476 & 516 & 572 & 608{,}256 & 370{,}006{,}990{,}849 \\ \hline
-
-\end{tabular}\pagebreak
-
-\begin{tabular}{ | c | r | r | r | r | r | }
-\hline
-
-$g$ & $x$ & $y$ & $z$ & $w$ & $PW(4, \{g\}) <$ \\ \hline
 $x^2 + 53x$ & 85 & 93 & 114 & 25{,}308 & 641{,}836{,}189 \\ \hline
 $x^2 + 54x$ & 180 & 186 & 200 & 141{,}880 & 20{,}137{,}595{,}921 \\ \hline
 $x^2 + 55x$ & 81 & 106 & 589 & 2{,}300{,}942 & 5{,}294{,}460{,}639{,}175 \\ \hline
@@ -194,13 +408,6 @@ $x^2 + 102x$ & 238 & 308 & 578 & 994{,}168 & 988{,}471{,}417{,}361 \\ \hline
 $x^2 + 103x$ & 114 & 128 & 179 & 54{,}306 & 2{,}954{,}735{,}155 \\ \hline
 $x^2 + 104x$ & 2{,}176 & 2{,}184 & 2{,}197 & 5{,}060{,}337 & 25{,}607{,}536{,}828{,}618 \\ \hline
 $x^2 + 105x$ & 70 & 95 & 205 & 153{,}514 & 23{,}582{,}667{,}167 \\ \hline
-
-\end{tabular}\pagebreak
-
-\begin{tabular}{ | c | r | r | r | r | r | }
-\hline
-
-$g$ & $x$ & $y$ & $z$ & $w$ & $PW(4, \{g\}) <$ \\ \hline
 $x^2 + 106x$ & 170 & 186 & 228 & 101{,}232 & 10{,}258{,}648{,}417 \\ \hline
 $x^2 + 107x$ & 46 & 67 & 162 & 50{,}616 & 2{,}567{,}395{,}369 \\ \hline
 $x^2 + 108x$ & 420 & 444 & 528 & 466{,}848 & 217{,}997{,}474{,}689 \\ \hline
@@ -254,13 +461,6 @@ $x^2 + 155x$ & 66 & 91 & 216 & 102{,}522 & 10{,}526{,}651{,}395 \\ \hline
 $x^2 + 156x$ & 100 & 154 & 338 & 408{,}892 & 167{,}256{,}454{,}817 \\ \hline
 $x^2 + 157x$ & 218 & 269 & 764 & 1{,}025{,}238 & 1{,}051{,}273{,}919{,}011 \\ \hline
 $x^2 + 158x$ & 648 & 668 & 914 & 1{,}074{,}056 & 1{,}153{,}765{,}991{,}985 \\ \hline
-
-\end{tabular}\pagebreak
-
-\begin{tabular}{ | c | r | r | r | r | r | }
-\hline
-
-$g$ & $x$ & $y$ & $z$ & $w$ & $PW(4, \{g\}) <$ \\ \hline
 $x^2 + 159x$ & 255 & 279 & 342 & 227{,}772 & 51{,}916{,}299{,}733 \\ \hline
 $x^2 + 160x$ & 224 & 240 & 260 & 776{,}841 & 603{,}606{,}233{,}842 \\ \hline
 $x^2 + 161x$ & 105 & 154 & 273 & 166{,}992 & 27{,}913{,}213{,}777 \\ \hline
@@ -314,13 +514,6 @@ $x^2 + 208x$ & 432 & 488 & 543 & 412{,}353 & 170{,}120{,}766{,}034 \\ \hline
 $x^2 + 209x$ & 792 & 814 & 847 & 934{,}362 & 873{,}227{,}628{,}703 \\ \hline
 $x^2 + 210x$ & 140 & 190 & 410 & 614{,}056 & 377{,}193{,}722{,}897 \\ \hline
 $x^2 + 211x$ & 125 & 147 & 212 & 100{,}302 & 10{,}081{,}654{,}927 \\ \hline
-
-\end{tabular}\pagebreak
-
-\begin{tabular}{ | c | r | r | r | r | r | }
-\hline
-
-$g$ & $x$ & $y$ & $z$ & $w$ & $PW(4, \{g\}) <$ \\ \hline
 $x^2 + 212x$ & 340 & 372 & 456 & 315{,}573 & 99{,}653{,}219{,}806 \\ \hline
 $x^2 + 213x$ & 21 & 39 & 89 & 31{,}792 & 1{,}017{,}502{,}961 \\ \hline
 $x^2 + 214x$ & 92 & 134 & 324 & 202{,}464 & 41{,}034{,}998{,}593 \\ \hline
@@ -374,13 +567,6 @@ $x^2 + 261x$ & 954 & 990 & 1{,}029 & 1{,}406{,}790 & 1{,}979{,}425{,}276{,}291 \
 $x^2 + 262x$ & 348 & 426 & 566 & 535{,}008 & 286{,}373{,}732{,}161 \\ \hline
 $x^2 + 263x$ & 1{,}071 & 1{,}086 & 1{,}801 & 14{,}606{,}478 & 213{,}353{,}041{,}068{,}199 \\ \hline
 $x^2 + 264x$ & 1{,}980 & 2{,}124 & 3{,}804 & 23{,}820{,}912 & 567{,}442{,}137{,}232{,}513 \\ \hline
-
-\end{tabular}\pagebreak
-
-\begin{tabular}{ | c | r | r | r | r | r | }
-\hline
-
-$g$ & $x$ & $y$ & $z$ & $w$ & $PW(4, \{g\}) <$ \\ \hline
 $x^2 + 265x$ & 255 & 278 & 480 & 553{,}950 & 307{,}007{,}399{,}251 \\ \hline
 $x^2 + 266x$ & 1{,}008 & 1{,}036 & 1{,}078 & 1{,}513{,}512 & 2{,}291{,}121{,}168{,}337 \\ \hline
 $x^2 + 267x$ & 897 & 901 & 911 & 1{,}378{,}528 & 1{,}900{,}707{,}513{,}761 \\ \hline
@@ -434,13 +620,6 @@ $x^2 + 314x$ & 104 & 134 & 167 & 503{,}239 & 253{,}407{,}508{,}168 \\ \hline
 $x^2 + 315x$ & 210 & 285 & 615 & 1{,}381{,}626 & 1{,}909{,}325{,}616{,}067 \\ \hline
 $x^2 + 316x$ & 69 & 111 & 261 & 435{,}882 & 190{,}130{,}856{,}637 \\ \hline
 $x^2 + 317x$ & 567 & 611 & 731 & 2{,}554{,}028 & 6{,}523{,}868{,}651{,}661 \\ \hline
-
-\end{tabular}\pagebreak
-
-\begin{tabular}{ | c | r | r | r | r | r | }
-\hline
-
-$g$ & $x$ & $y$ & $z$ & $w$ & $PW(4, \{g\}) <$ \\ \hline
 $x^2 + 318x$ & 9{,}042 & 9{,}063 & 9{,}099 & 86{,}251{,}363 & 7{,}439{,}325{,}047{,}291{,}204 \\ \hline
 $x^2 + 319x$ & 989 & 1{,}352 & 2{,}322 & 7{,}097{,}982 & 50{,}383{,}612{,}728{,}583 \\ \hline
 $x^2 + 320x$ & 448 & 480 & 520 & 3{,}107{,}364 & 9{,}656{,}705{,}384{,}977 \\ \hline
@@ -494,13 +673,6 @@ $x^2 + 367x$ & 3{,}077 & 3{,}111 & 3{,}342 & 13{,}284{,}366 & 176{,}479{,}255{,}
 $x^2 + 368x$ & 112 & 192 & 324 & 277{,}968 & 77{,}368{,}501{,}249 \\ \hline
 $x^2 + 369x$ & 345 & 426 & 507 & 1{,}311{,}642 & 1{,}720{,}888{,}732{,}063 \\ \hline
 $x^2 + 370x$ & 434 & 450 & 470 & 532{,}800 & 284{,}072{,}976{,}001 \\ \hline
-
-\end{tabular}\pagebreak
-
-\begin{tabular}{ | c | r | r | r | r | r | }
-\hline
-
-$g$ & $x$ & $y$ & $z$ & $w$ & $PW(4, \{g\}) <$ \\ \hline
 $x^2 + 371x$ & 196 & 266 & 518 & 841{,}472 & 708{,}387{,}312{,}897 \\ \hline
 $x^2 + 372x$ & 240 & 312 & 627 & 773{,}253 & 598{,}207{,}852{,}126 \\ \hline
 $x^2 + 373x$ & 1{,}235 & 1{,}304 & 1{,}389 & 11{,}908{,}278 & 141{,}811{,}526{,}712{,}979 \\ \hline
@@ -554,13 +726,6 @@ $x^2 + 420x$ & 1{,}155 & 1{,}161 & 1{,}305 & 5{,}993{,}941 & 35{,}929{,}846{,}16
 $x^2 + 421x$ & 28{,}490 & 28{,}509 & 28{,}575 & 830{,}998{,}590 & 690{,}559{,}006{,}432{,}394{,}491 \\ \hline
 $x^2 + 422x$ & 208 & 327 & 987 & 26{,}939{,}643 & 725{,}755{,}733{,}496{,}796 \\ \hline
 $x^2 + 423x$ & 333 & 414 & 549 & 1{,}731{,}006 & 2{,}997{,}113{,}987{,}575 \\ \hline
-
-\end{tabular}\pagebreak
-
-\begin{tabular}{ | c | r | r | r | r | r | }
-\hline
-
-$g$ & $x$ & $y$ & $z$ & $w$ & $PW(4, \{g\}) <$ \\ \hline
 $x^2 + 424x$ & 224 & 304 & 832 & 1{,}988{,}084 & 3{,}953{,}320{,}938{,}673 \\ \hline
 $x^2 + 425x$ & 4{,}420 & 4{,}437 & 4{,}675 & 26{,}833{,}650 & 720{,}056{,}176{,}623{,}751 \\ \hline
 $x^2 + 426x$ & 42 & 78 & 178 & 127{,}168 & 16{,}225{,}873{,}793 \\ \hline
@@ -614,13 +779,6 @@ $x^2 + 473x$ & 2{,}673 & 2{,}684 & 3{,}014 & 16{,}882{,}646 & 285{,}031{,}721{,}
 $x^2 + 474x$ & 814 & 922 & 1{,}034 & 1{,}702{,}912 & 2{,}900{,}716{,}460{,}033 \\ \hline
 $x^2 + 475x$ & 812 & 863 & 1{,}280 & 2{,}669{,}550 & 7{,}127{,}765{,}238{,}751 \\ \hline
 $x^2 + 476x$ & 481 & 513 & 561 & 1{,}042{,}074 & 1{,}086{,}414{,}248{,}701 \\ \hline
-
-\end{tabular}\pagebreak
-
-\begin{tabular}{ | c | r | r | r | r | r | }
-\hline
-
-$g$ & $x$ & $y$ & $z$ & $w$ & $PW(4, \{g\}) <$ \\ \hline
 $x^2 + 477x$ & 765 & 837 & 1{,}026 & 2{,}049{,}948 & 4{,}203{,}264{,}627{,}901 \\ \hline
 $x^2 + 478x$ & 372 & 396 & 438 & 559{,}383 & 313{,}176{,}725{,}764 \\ \hline
 $x^2 + 479x$ & 13{,}717 & 13{,}749 & 14{,}262 & 225{,}588{,}332 & 50{,}890{,}203{,}591{,}353{,}253 \\ \hline
@@ -674,13 +832,6 @@ $x^2 + 526x$ & 2{,}142 & 2{,}172 & 3{,}602 & 58{,}425{,}912 & 3{,}413{,}617{,}92
 $x^2 + 527x$ & 748 & 867 & 1{,}071 & 15{,}063{,}258 & 226{,}909{,}679{,}911{,}531 \\ \hline
 $x^2 + 528x$ & 1{,}380 & 1{,}740 & 4{,}644 & 33{,}166{,}368 & 1{,}100{,}025{,}478{,}153{,}729 \\ \hline
 $x^2 + 529x$ & 345 & 506 & 897 & 1{,}802{,}832 & 3{,}251{,}156{,}918{,}353 \\ \hline
-
-\end{tabular}\pagebreak
-
-\begin{tabular}{ | c | r | r | r | r | r | }
-\hline
-
-$g$ & $x$ & $y$ & $z$ & $w$ & $PW(4, \{g\}) <$ \\ \hline
 $x^2 + 530x$ & 2{,}788 & 2{,}800 & 2{,}932 & 10{,}935{,}984 & 119{,}601{,}542{,}119{,}777 \\ \hline
 $x^2 + 531x$ & 285 & 339 & 500 & 987{,}442 & 975{,}566{,}035{,}067 \\ \hline
 $x^2 + 532x$ & 392 & 476 & 1{,}932 & 17{,}990{,}301 & 323{,}660{,}500{,}910{,}734 \\ \hline
@@ -734,13 +885,6 @@ $x^2 + 579x$ & 2{,}706 & 2{,}760 & 2{,}835 & 10{,}434{,}852 & 108{,}892{,}178{,}
 $x^2 + 580x$ & 848 & 860 & 897 & 6{,}375{,}525 & 40{,}651{,}016{,}830{,}126 \\ \hline
 $x^2 + 581x$ & 1{,}519 & 1{,}624 & 1{,}981 & 5{,}466{,}342 & 29{,}884{,}070{,}805{,}667 \\ \hline
 $x^2 + 582x$ & 1{,}560 & 1{,}686 & 1{,}962 & 33{,}539{,}848 & 1{,}124{,}940{,}924{,}054{,}641 \\ \hline
-
-\end{tabular}\pagebreak
-
-\begin{tabular}{ | c | r | r | r | r | r | }
-\hline
-
-$g$ & $x$ & $y$ & $z$ & $w$ & $PW(4, \{g\}) <$ \\ \hline
 $x^2 + 583x$ & 935 & 1{,}023 & 1{,}254 & 3{,}062{,}268 & 9{,}379{,}270{,}606{,}069 \\ \hline
 $x^2 + 584x$ & 1{,}480 & 1{,}506 & 1{,}590 & 4{,}879{,}380 & 23{,}811{,}198{,}742{,}321 \\ \hline
 $x^2 + 585x$ & 1{,}485 & 1{,}521 & 1{,}755 & 8{,}784{,}450 & 77{,}171{,}700{,}705{,}751 \\ \hline
@@ -794,13 +938,6 @@ $x^2 + 632x$ & 138 & 222 & 522 & 1{,}743{,}528 & 3{,}040{,}991{,}796{,}481 \\ \h
 $x^2 + 633x$ & 375 & 441 & 636 & 902{,}718 & 815{,}471{,}208{,}019 \\ \hline
 $x^2 + 634x$ & 1{,}134 & 1{,}222 & 1{,}462 & 10{,}216{,}112 & 104{,}375{,}421{,}411{,}553 \\ \hline
 $x^2 + 635x$ & 1{,}395 & 1{,}420 & 1{,}585 & 3{,}653{,}604 & 13{,}351{,}142{,}227{,}357 \\ \hline
-
-\end{tabular}\pagebreak
-
-\begin{tabular}{ | c | r | r | r | r | r | }
-\hline
-
-$g$ & $x$ & $y$ & $z$ & $w$ & $PW(4, \{g\}) <$ \\ \hline
 $x^2 + 636x$ & 141 & 231 & 583 & 5{,}197{,}717 & 27{,}019{,}567{,}760{,}102 \\ \hline
 $x^2 + 637x$ & 5{,}250 & 5{,}267 & 5{,}757 & 44{,}197{,}248 & 1{,}953{,}424{,}884{,}420{,}481 \\ \hline
 $x^2 + 638x$ & 16{,}359 & 16{,}399 & 16{,}603 & 291{,}805{,}446 & 85{,}150{,}604{,}487{,}133{,}465 \\ \hline
@@ -854,13 +991,6 @@ $x^2 + 685x$ & 1{,}595 & 1{,}646 & 2{,}871 & 12{,}289{,}776 & 151{,}047{,}012{,}
 $x^2 + 686x$ & 420 & 550 & 940 & 1{,}825{,}527 & 3{,}333{,}801{,}139{,}252 \\ \hline
 $x^2 + 687x$ & 5{,}382 & 5{,}397 & 6{,}057 & 49{,}400{,}496 & 2{,}440{,}442{,}943{,}186{,}769 \\ \hline
 $x^2 + 688x$ & 784 & 808 & 1{,}039 & 1{,}895{,}041 & 3{,}592{,}484{,}179{,}890 \\ \hline
-
-\end{tabular}\pagebreak
-
-\begin{tabular}{ | c | r | r | r | r | r | }
-\hline
-
-$g$ & $x$ & $y$ & $z$ & $w$ & $PW(4, \{g\}) <$ \\ \hline
 $x^2 + 689x$ & 12{,}155 & 12{,}194 & 12{,}254 & 161{,}705{,}072 & 26{,}148{,}641{,}725{,}319{,}793 \\ \hline
 $x^2 + 690x$ & 3{,}960 & 3{,}990 & 4{,}095 & 21{,}050{,}575 & 443{,}141{,}232{,}727{,}376 \\ \hline
 $x^2 + 691x$ & 3{,}185 & 3{,}219 & 3{,}261 & 13{,}747{,}212 & 188{,}995{,}337{,}096{,}437 \\ \hline
@@ -914,13 +1044,6 @@ $x^2 + 738x$ & 497 & 533 & 673 & 2{,}267{,}878 & 5{,}144{,}944{,}316{,}849 \\ \h
 $x^2 + 739x$ & 17{,}391 & 17{,}400 & 17{,}465 & 318{,}156{,}930 & 101{,}224{,}067{,}224{,}996{,}171 \\ \hline
 $x^2 + 740x$ & 660 & 700 & 745 & 1{,}190{,}325 & 1{,}417{,}754{,}446{,}126 \\ \hline
 $x^2 + 741x$ & 1{,}464 & 1{,}590 & 1{,}851 & 6{,}336{,}252 & 40{,}152{,}784{,}570{,}237 \\ \hline
-
-\end{tabular}\pagebreak
-
-\begin{tabular}{ | c | r | r | r | r | r | }
-\hline
-
-$g$ & $x$ & $y$ & $z$ & $w$ & $PW(4, \{g\}) <$ \\ \hline
 $x^2 + 742x$ & 392 & 532 & 1{,}036 & 3{,}365{,}888 & 11{,}331{,}699{,}517{,}441 \\ \hline
 $x^2 + 743x$ & 14{,}098 & 14{,}299 & 14{,}944 & 239{,}060{,}556 & 57{,}150{,}127{,}057{,}022{,}245 \\ \hline
 $x^2 + 744x$ & 1{,}440 & 1{,}512 & 1{,}592 & 9{,}211{,}657 & 84{,}861{,}478{,}158{,}458 \\ \hline
@@ -974,13 +1097,6 @@ $x^2 + 791x$ & 824 & 860 & 1{,}154 & 3{,}041{,}662 & 9{,}254{,}113{,}676{,}887 \
 $x^2 + 792x$ & 990 & 1{,}386 & 2{,}442 & 14{,}944{,}468 & 223{,}348{,}959{,}821{,}681 \\ \hline
 $x^2 + 793x$ & 765 & 780 & 849 & 2{,}620{,}998 & 6{,}871{,}708{,}967{,}419 \\ \hline
 $x^2 + 794x$ & 1{,}260 & 1{,}334 & 1{,}442 & 35{,}023{,}112 & 1{,}226{,}646{,}182{,}515{,}473 \\ \hline
-
-\end{tabular}\pagebreak
-
-\begin{tabular}{ | c | r | r | r | r | r | }
-\hline
-
-$g$ & $x$ & $y$ & $z$ & $w$ & $PW(4, \{g\}) <$ \\ \hline
 $x^2 + 795x$ & 4{,}182 & 4{,}200 & 4{,}398 & 24{,}605{,}964 & 605{,}473{,}026{,}110{,}677 \\ \hline
 $x^2 + 796x$ & 440 & 468 & 1{,}728 & 9{,}301{,}632 & 86{,}527{,}761{,}962{,}497 \\ \hline
 $x^2 + 797x$ & 648 & 851 & 1{,}082 & 18{,}329{,}468 & 335{,}984{,}005{,}749{,}021 \\ \hline
@@ -1034,13 +1150,6 @@ $x^2 + 844x$ & 2{,}156 & 2{,}168 & 2{,}208 & 6{,}987{,}141 & 48{,}826{,}036{,}50
 $x^2 + 845x$ & 2{,}145 & 2{,}197 & 2{,}535 & 18{,}328{,}050 & 335{,}932{,}904{,}004{,}751 \\ \hline
 $x^2 + 846x$ & 288 & 351 & 783 & 3{,}196{,}179 & 10{,}218{,}264{,}167{,}476 \\ \hline
 $x^2 + 847x$ & 13{,}754 & 13{,}899 & 14{,}262 & 255{,}291{,}858 & 65{,}174{,}148{,}993{,}295{,}891 \\ \hline
-
-\end{tabular}\pagebreak
-
-\begin{tabular}{ | c | r | r | r | r | r | }
-\hline
-
-$g$ & $x$ & $y$ & $z$ & $w$ & $PW(4, \{g\}) <$ \\ \hline
 $x^2 + 848x$ & 448 & 608 & 1{,}664 & 7{,}952{,}336 & 63{,}246{,}391{,}437{,}825 \\ \hline
 $x^2 + 849x$ & 2{,}232 & 2{,}337 & 3{,}717 & 50{,}739{,}724 & 2{,}574{,}562{,}669{,}621{,}853 \\ \hline
 $x^2 + 850x$ & 3{,}800 & 3{,}842 & 4{,}590 & 58{,}232{,}064 & 3{,}391{,}022{,}774{,}954{,}497 \\ \hline
@@ -1094,13 +1203,6 @@ $x^2 + 897x$ & 2{,}010 & 2{,}028 & 2{,}483 & 15{,}751{,}138 & 248{,}112{,}477{,}
 $x^2 + 898x$ & 2{,}030 & 2{,}145 & 3{,}509 & 16{,}777{,}923 & 281{,}513{,}766{,}768{,}784 \\ \hline
 $x^2 + 899x$ & 1{,}276 & 1{,}479 & 1{,}827 & 43{,}834{,}602 & 1{,}921{,}511{,}739{,}805{,}603 \\ \hline
 $x^2 + 900x$ & 5{,}220 & 5{,}232 & 5{,}880 & 46{,}130{,}749 & 2{,}128{,}087{,}520{,}975{,}102 \\ \hline
-
-\end{tabular}\pagebreak
-
-\begin{tabular}{ | c | r | r | r | r | r | }
-\hline
-
-$g$ & $x$ & $y$ & $z$ & $w$ & $PW(4, \{g\}) <$ \\ \hline
 $x^2 + 901x$ & 914 & 1{,}055 & 1{,}223 & 24{,}867{,}042 & 618{,}392{,}183{,}034{,}607 \\ \hline
 $x^2 + 902x$ & 476 & 512 & 1{,}442 & 6{,}391{,}496 & 40{,}856{,}986{,}247{,}409 \\ \hline
 $x^2 + 903x$ & 5{,}103 & 5{,}124 & 5{,}754 & 61{,}530{,}966 & 3{,}786{,}115{,}339{,}355{,}455 \\ \hline
@@ -1154,13 +1256,6 @@ $x^2 + 950x$ & 1{,}624 & 1{,}726 & 2{,}560 & 10{,}678{,}200 & 114{,}034{,}099{,}
 $x^2 + 951x$ & 309 & 423 & 696 & 1{,}200{,}582 & 1{,}442{,}538{,}892{,}207 \\ \hline
 $x^2 + 952x$ & 962 & 1{,}026 & 1{,}122 & 4{,}168{,}296 & 17{,}378{,}659{,}761{,}409 \\ \hline
 $x^2 + 953x$ & 3{,}700 & 4{,}239 & 5{,}343 & 79{,}945{,}338 & 6{,}391{,}333{,}255{,}841{,}359 \\ \hline
-
-\end{tabular}\pagebreak
-
-\begin{tabular}{ | c | r | r | r | r | r | }
-\hline
-
-$g$ & $x$ & $y$ & $z$ & $w$ & $PW(4, \{g\}) <$ \\ \hline
 $x^2 + 954x$ & 1{,}530 & 1{,}674 & 2{,}052 & 8{,}199{,}792 & 67{,}244{,}411{,}444{,}833 \\ \hline
 $x^2 + 955x$ & 570 & 893 & 1{,}905 & 12{,}769{,}050 & 163{,}060{,}832{,}345{,}251 \\ \hline
 $x^2 + 956x$ & 744 & 792 & 876 & 2{,}237{,}532 & 5{,}008{,}688{,}531{,}617 \\ \hline
@@ -1214,13 +1309,6 @@ $x^2 + 1{,}003x$ & 975 & 1{,}241 & 7{,}038 & 58{,}521{,}108 & 3{,}424{,}778{,}77
 $x^2 + 1{,}004x$ & 1{,}416 & 1{,}456 & 1{,}519 & 7{,}414{,}197 & 54{,}977{,}761{,}008{,}598 \\ \hline
 $x^2 + 1{,}005x$ & 4{,}095 & 4{,}125 & 4{,}440 & 105{,}871{,}050 & 11{,}208{,}785{,}628{,}507{,}751 \\ \hline
 $x^2 + 1{,}006x$ & 114 & 210 & 375 & 645{,}555 & 417{,}390{,}686{,}356 \\ \hline
-
-\end{tabular}\pagebreak
-
-\begin{tabular}{ | c | r | r | r | r | r | }
-\hline
-
-$g$ & $x$ & $y$ & $z$ & $w$ & $PW(4, \{g\}) <$ \\ \hline
 $x^2 + 1{,}007x$ & 981 & 1{,}342 & 2{,}642 & 31{,}623{,}086 & 1{,}000{,}051{,}412{,}610{,}999 \\ \hline
 $x^2 + 1{,}008x$ & 6{,}960 & 6{,}992 & 7{,}190 & 67{,}834{,}180 & 4{,}601{,}544{,}353{,}125{,}841 \\ \hline
 $x^2 + 1{,}009x$ & 209 & 314 & 3{,}369 & 45{,}004{,}014 & 2{,}025{,}406{,}685{,}162{,}323 \\ \hline
@@ -1274,13 +1362,6 @@ $x^2 + 1{,}056x$ & 3{,}960 & 3{,}993 & 4{,}191 & 22{,}403{,}617 & 501{,}945{,}71
 $x^2 + 1{,}057x$ & 1{,}932 & 2{,}016 & 2{,}231 & 7{,}755{,}948 & 60{,}162{,}927{,}415{,}741 \\ \hline
 $x^2 + 1{,}058x$ & 690 & 1{,}012 & 1{,}794 & 7{,}211{,}328 & 52{,}010{,}881{,}108{,}609 \\ \hline
 $x^2 + 1{,}059x$ & 5{,}673 & 6{,}183 & 7{,}227 & 68{,}629{,}572 & 4{,}710{,}090{,}831{,}619{,}933 \\ \hline
-
-\end{tabular}\pagebreak
-
-\begin{tabular}{ | c | r | r | r | r | r | }
-\hline
-
-$g$ & $x$ & $y$ & $z$ & $w$ & $PW(4, \{g\}) <$ \\ \hline
 $x^2 + 1{,}060x$ & 975 & 1{,}005 & 1{,}085 & 3{,}189{,}186 & 10{,}174{,}287{,}879{,}757 \\ \hline
 $x^2 + 1{,}061x$ & 4{,}329 & 4{,}500 & 5{,}863 & 103{,}127{,}532 & 10{,}635{,}397{,}274{,}722{,}477 \\ \hline
 $x^2 + 1{,}062x$ & 570 & 678 & 1{,}000 & 3{,}949{,}768 & 15{,}604{,}861{,}907{,}441 \\ \hline
@@ -1334,13 +1415,6 @@ $x^2 + 1{,}109x$ & 7{,}533 & 8{,}802 & 13{,}664 & 266{,}958{,}458 & 71{,}267{,}1
 $x^2 + 1{,}110x$ & 1{,}302 & 1{,}350 & 1{,}410 & 4{,}795{,}200 & 22{,}999{,}265{,}712{,}001 \\ \hline
 $x^2 + 1{,}111x$ & 2{,}737 & 2{,}842 & 3{,}307 & 71{,}493{,}152 & 5{,}111{,}350{,}211{,}786{,}977 \\ \hline
 $x^2 + 1{,}112x$ & 1{,}110 & 1{,}170 & 1{,}366 & 3{,}878{,}628 & 15{,}048{,}068{,}196{,}721 \\ \hline
-
-\end{tabular}\pagebreak
-
-\begin{tabular}{ | c | r | r | r | r | r | }
-\hline
-
-$g$ & $x$ & $y$ & $z$ & $w$ & $PW(4, \{g\}) <$ \\ \hline
 $x^2 + 1{,}113x$ & 588 & 798 & 1{,}554 & 7{,}573{,}248 & 57{,}362{,}514{,}294{,}529 \\ \hline
 $x^2 + 1{,}114x$ & 426 & 602 & 1{,}044 & 2{,}776{,}272 & 7{,}710{,}778{,}984{,}993 \\ \hline
 $x^2 + 1{,}115x$ & 3{,}900 & 3{,}910 & 4{,}050 & 21{,}505{,}200 & 462{,}497{,}605{,}338{,}001 \\ \hline
@@ -1394,13 +1468,6 @@ $x^2 + 1{,}162x$ & 338 & 558 & 1{,}122 & 3{,}015{,}408 & 9{,}096{,}189{,}310{,}5
 $x^2 + 1{,}163x$ & 4{,}662 & 4{,}753 & 5{,}304 & 55{,}274{,}898 & 3{,}055{,}378{,}633{,}616{,}779 \\ \hline
 $x^2 + 1{,}164x$ & 21{,}456 & 21{,}480 & 21{,}741 & 499{,}036{,}005 & 249{,}037{,}515{,}164{,}269{,}846 \\ \hline
 $x^2 + 1{,}165x$ & 4{,}865 & 4{,}890 & 5{,}003 & 71{,}383{,}254 & 5{,}095{,}652{,}113{,}119{,}427 \\ \hline
-
-\end{tabular}\pagebreak
-
-\begin{tabular}{ | c | r | r | r | r | r | }
-\hline
-
-$g$ & $x$ & $y$ & $z$ & $w$ & $PW(4, \{g\}) <$ \\ \hline
 $x^2 + 1{,}166x$ & 385 & 489 & 805 & 11{,}352{,}807 & 128{,}899{,}464{,}152{,}212 \\ \hline
 $x^2 + 1{,}167x$ & 5{,}616 & 5{,}682 & 5{,}961 & 44{,}386{,}056 & 1{,}970{,}173{,}765{,}762{,}489 \\ \hline
 $x^2 + 1{,}168x$ & 2{,}480 & 2{,}540 & 2{,}732 & 16{,}345{,}680 & 267{,}200{,}346{,}416{,}641 \\ \hline
@@ -1454,13 +1521,6 @@ $x^2 + 1{,}215x$ & 335 & 556 & 1{,}145 & 4{,}342{,}450 & 18{,}862{,}148{,}079{,}
 $x^2 + 1{,}216x$ & 4{,}160 & 4{,}224 & 4{,}416 & 28{,}065{,}792 & 787{,}722{,}808{,}590{,}337 \\ \hline
 $x^2 + 1{,}217x$ & 583 & 699 & 1{,}029 & 27{,}620{,}418 & 762{,}921{,}104{,}543{,}431 \\ \hline
 $x^2 + 1{,}218x$ & 1{,}617 & 1{,}785 & 2{,}289 & 52{,}627{,}078 & 2{,}769{,}673{,}438{,}599{,}089 \\ \hline
-
-\end{tabular}\pagebreak
-
-\begin{tabular}{ | c | r | r | r | r | r | }
-\hline
-
-$g$ & $x$ & $y$ & $z$ & $w$ & $PW(4, \{g\}) <$ \\ \hline
 $x^2 + 1{,}219x$ & 1{,}281 & 1{,}658 & 2{,}703 & 29{,}523{,}732 & 871{,}686{,}740{,}637{,}133 \\ \hline
 $x^2 + 1{,}220x$ & 11{,}700 & 11{,}704 & 11{,}755 & 153{,}209{,}925 & 23{,}473{,}468{,}034{,}614{,}126 \\ \hline
 $x^2 + 1{,}221x$ & 3{,}333 & 3{,}861 & 5{,}148 & 37{,}230{,}732 & 1{,}386{,}172{,}863{,}979{,}597 \\ \hline
@@ -1514,13 +1574,6 @@ $x^2 + 1{,}268x$ & 412 & 564 & 928 & 2{,}134{,}368 & 4{,}558{,}233{,}138{,}049 \
 $x^2 + 1{,}269x$ & 486 & 621 & 3{,}069 & 24{,}230{,}592 & 587{,}152{,}337{,}291{,}713 \\ \hline
 $x^2 + 1{,}270x$ & 2{,}790 & 2{,}840 & 3{,}170 & 14{,}614{,}416 & 213{,}599{,}715{,}329{,}377 \\ \hline
 $x^2 + 1{,}271x$ & 1{,}221 & 1{,}351 & 1{,}473 & 7{,}084{,}644 & 50{,}201{,}185{,}189{,}261 \\ \hline
-
-\end{tabular}\pagebreak
-
-\begin{tabular}{ | c | r | r | r | r | r | }
-\hline
-
-$g$ & $x$ & $y$ & $z$ & $w$ & $PW(4, \{g\}) <$ \\ \hline
 $x^2 + 1{,}272x$ & 282 & 462 & 1{,}166 & 20{,}790{,}868 & 432{,}286{,}638{,}177{,}521 \\ \hline
 $x^2 + 1{,}273x$ & 3{,}135 & 3{,}249 & 3{,}534 & 72{,}480{,}858 & 5{,}253{,}567{,}044{,}548{,}399 \\ \hline
 $x^2 + 1{,}274x$ & 10{,}500 & 10{,}534 & 11{,}514 & 176{,}788{,}992 & 31{,}254{,}572{,}921{,}551{,}873 \\ \hline
@@ -1574,13 +1627,6 @@ $x^2 + 1{,}321x$ & 23{,}324 & 23{,}381 & 24{,}221 & 635{,}559{,}582 & 403{,}936{
 $x^2 + 1{,}322x$ & 7{,}456 & 7{,}462 & 7{,}617 & 69{,}181{,}611 & 4{,}786{,}186{,}758{,}645{,}064 \\ \hline
 $x^2 + 1{,}323x$ & 1{,}575 & 1{,}638 & 5{,}058 & 39{,}713{,}958 & 1{,}577{,}251{,}001{,}592{,}199 \\ \hline
 $x^2 + 1{,}324x$ & 476 & 708 & 1{,}008 & 3{,}512{,}637 & 12{,}343{,}269{,}425{,}158 \\ \hline
-
-\end{tabular}\pagebreak
-
-\begin{tabular}{ | c | r | r | r | r | r | }
-\hline
-
-$g$ & $x$ & $y$ & $z$ & $w$ & $PW(4, \{g\}) <$ \\ \hline
 $x^2 + 1{,}325x$ & 6{,}970 & 7{,}000 & 7{,}330 & 68{,}349{,}900 & 4{,}671{,}799{,}393{,}627{,}501 \\ \hline
 $x^2 + 1{,}326x$ & 23{,}874 & 23{,}904 & 24{,}219 & 706{,}575{,}987 & 499{,}250{,}562{,}324{,}782{,}932 \\ \hline
 $x^2 + 1{,}327x$ & 4{,}148 & 4{,}248 & 6{,}866 & 64{,}773{,}948 & 4{,}195{,}750{,}294{,}535{,}701 \\ \hline
@@ -1634,13 +1680,6 @@ $x^2 + 1{,}374x$ & 10{,}764 & 10{,}794 & 12{,}114 & 197{,}601{,}984 & 39{,}046{,
 $x^2 + 1{,}375x$ & 330 & 473 & 1{,}100 & 50{,}351{,}004 & 2{,}535{,}292{,}836{,}438{,}517 \\ \hline
 $x^2 + 1{,}376x$ & 1{,}568 & 1{,}616 & 2{,}078 & 7{,}580{,}164 & 57{,}469{,}316{,}572{,}561 \\ \hline
 $x^2 + 1{,}377x$ & 5{,}661 & 5{,}742 & 6{,}732 & 62{,}856{,}648 & 3{,}951{,}044{,}751{,}400{,}201 \\ \hline
-
-\end{tabular}\pagebreak
-
-\begin{tabular}{ | c | r | r | r | r | r | }
-\hline
-
-$g$ & $x$ & $y$ & $z$ & $w$ & $PW(4, \{g\}) <$ \\ \hline
 $x^2 + 1{,}378x$ & 2{,}210 & 2{,}418 & 2{,}964 & 17{,}108{,}208 & 292{,}714{,}356{,}081{,}889 \\ \hline
 $x^2 + 1{,}379x$ & 5{,}320 & 5{,}404 & 5{,}859 & 66{,}877{,}062 & 4{,}472{,}633{,}645{,}220{,}343 \\ \hline
 $x^2 + 1{,}380x$ & 945 & 1{,}041 & 1{,}275 & 13{,}213{,}125 & 174{,}604{,}906{,}378{,}126 \\ \hline
@@ -1694,13 +1733,6 @@ $x^2 + 1{,}427x$ & 1{,}038 & 1{,}077 & 1{,}192 & 6{,}499{,}578 & 42{,}253{,}789{
 $x^2 + 1{,}428x$ & 1{,}443 & 1{,}539 & 1{,}683 & 9{,}378{,}666 & 87{,}972{,}768{,}674{,}605 \\ \hline
 $x^2 + 1{,}429x$ & 5{,}565 & 6{,}126 & 6{,}657 & 70{,}091{,}112 & 4{,}912{,}864{,}141{,}595{,}593 \\ \hline
 $x^2 + 1{,}430x$ & 3{,}850 & 3{,}883 & 4{,}695 & 29{,}488{,}875 & 869{,}635{,}917{,}856{,}876 \\ \hline
-
-\end{tabular}\pagebreak
-
-\begin{tabular}{ | c | r | r | r | r | r | }
-\hline
-
-$g$ & $x$ & $y$ & $z$ & $w$ & $PW(4, \{g\}) <$ \\ \hline
 $x^2 + 1{,}431x$ & 2{,}295 & 2{,}511 & 3{,}078 & 18{,}449{,}532 & 340{,}411{,}632{,}299{,}317 \\ \hline
 $x^2 + 1{,}432x$ & 255 & 297 & 1{,}151 & 8{,}815{,}818 & 77{,}731{,}271{,}260{,}501 \\ \hline
 $x^2 + 1{,}433x$ & 10{,}962 & 11{,}134 & 18{,}594 & 383{,}438{,}868 & 147{,}025{,}914{,}961{,}019{,}269 \\ \hline
@@ -1754,13 +1786,6 @@ $x^2 + 1{,}480x$ & 1{,}640 & 1{,}680 & 1{,}992 & 7{,}226{,}100 & 52{,}227{,}215{
 $x^2 + 1{,}481x$ & 345 & 379 & 1{,}611 & 14{,}170{,}392 & 200{,}820{,}995{,}784{,}217 \\ \hline
 $x^2 + 1{,}482x$ & 5{,}070 & 5{,}148 & 5{,}382 & 41{,}687{,}568 & 1{,}737{,}915{,}106{,}730{,}401 \\ \hline
 $x^2 + 1{,}483x$ & 1{,}407 & 1{,}562 & 1{,}895 & 6{,}521{,}430 & 42{,}538{,}720{,}525{,}591 \\ \hline
-
-\end{tabular}\pagebreak
-
-\begin{tabular}{ | c | r | r | r | r | r | }
-\hline
-
-$g$ & $x$ & $y$ & $z$ & $w$ & $PW(4, \{g\}) <$ \\ \hline
 $x^2 + 1{,}484x$ & 784 & 1{,}064 & 2{,}912 & 24{,}354{,}029 & 593{,}154{,}869{,}911{,}878 \\ \hline
 $x^2 + 1{,}485x$ & 2{,}475 & 2{,}508 & 2{,}585 & 14{,}100{,}700 & 198{,}850{,}680{,}029{,}501 \\ \hline
 $x^2 + 1{,}486x$ & 530 & 610 & 739 & 28{,}205{,}075 & 795{,}568{,}168{,}497{,}076 \\ \hline
@@ -1814,13 +1839,6 @@ $x^2 + 1{,}533x$ & 2{,}247 & 2{,}262 & 2{,}523 & 13{,}639{,}768 & 186{,}064{,}18
 $x^2 + 1{,}534x$ & 551 & 771 & 1{,}391 & 7{,}732{,}230 & 59{,}799{,}242{,}013{,}721 \\ \hline
 $x^2 + 1{,}535x$ & 2{,}065 & 2{,}091 & 2{,}490 & 10{,}517{,}916 & 110{,}642{,}701{,}984{,}117 \\ \hline
 $x^2 + 1{,}536x$ & 1{,}830 & 2{,}010 & 2{,}838 & 26{,}127{,}112 & 682{,}666{,}112{,}704{,}577 \\ \hline
-
-\end{tabular}\pagebreak
-
-\begin{tabular}{ | c | r | r | r | r | r | }
-\hline
-
-$g$ & $x$ & $y$ & $z$ & $w$ & $PW(4, \{g\}) <$ \\ \hline
 $x^2 + 1{,}537x$ & 2{,}465 & 2{,}697 & 3{,}306 & 21{,}284{,}028 & 453{,}042{,}561{,}455{,}821 \\ \hline
 $x^2 + 1{,}538x$ & 2{,}200 & 2{,}310 & 2{,}868 & 14{,}938{,}448 & 223{,}180{,}203{,}981{,}729 \\ \hline
 $x^2 + 1{,}539x$ & 5{,}265 & 5{,}346 & 5{,}589 & 44{,}955{,}972 & 2{,}021{,}108{,}605{,}705{,}693 \\ \hline
@@ -1874,13 +1892,6 @@ $x^2 + 1{,}586x$ & 1{,}530 & 1{,}560 & 1{,}698 & 10{,}483{,}992 & 109{,}930{,}71
 $x^2 + 1{,}587x$ & 1{,}035 & 1{,}518 & 2{,}691 & 16{,}225{,}488 & 263{,}292{,}210{,}687{,}601 \\ \hline
 $x^2 + 1{,}588x$ & 3{,}536 & 3{,}648 & 3{,}764 & 22{,}253{,}517 & 495{,}254{,}357{,}454{,}286 \\ \hline
 $x^2 + 1{,}589x$ & 3{,}619 & 4{,}347 & 5{,}502 & 51{,}607{,}584 & 2{,}663{,}424{,}730{,}768{,}033 \\ \hline
-
-\end{tabular}\pagebreak
-
-\begin{tabular}{ | c | r | r | r | r | r | }
-\hline
-
-$g$ & $x$ & $y$ & $z$ & $w$ & $PW(4, \{g\}) <$ \\ \hline
 $x^2 + 1{,}590x$ & 8{,}364 & 8{,}400 & 8{,}796 & 98{,}423{,}856 & 9{,}687{,}411{,}923{,}839{,}777 \\ \hline
 $x^2 + 1{,}591x$ & 2{,}204 & 2{,}295 & 2{,}471 & 20{,}630{,}232 & 425{,}639{,}295{,}072{,}937 \\ \hline
 $x^2 + 1{,}592x$ & 880 & 936 & 3{,}456 & 37{,}206{,}528 & 1{,}384{,}384{,}958{,}607{,}361 \\ \hline
@@ -1934,13 +1945,6 @@ $x^2 + 1{,}639x$ & 686 & 962 & 1{,}634 & 37{,}001{,}412 & 1{,}369{,}165{,}135{,}
 $x^2 + 1{,}640x$ & 880 & 976 & 1{,}080 & 3{,}196{,}425 & 10{,}222{,}374{,}917{,}626 \\ \hline
 $x^2 + 1{,}641x$ & 19{,}499 & 19{,}549 & 19{,}634 & 438{,}956{,}572 & 192{,}683{,}592{,}429{,}725{,}837 \\ \hline
 $x^2 + 1{,}642x$ & 1{,}431 & 1{,}507 & 4{,}027 & 24{,}874{,}223 & 618{,}767{,}813{,}327{,}896 \\ \hline
-
-\end{tabular}\pagebreak
-
-\begin{tabular}{ | c | r | r | r | r | r | }
-\hline
-
-$g$ & $x$ & $y$ & $z$ & $w$ & $PW(4, \{g\}) <$ \\ \hline
 $x^2 + 1{,}643x$ & 568 & 618 & 2{,}233 & 10{,}107{,}468 & 102{,}177{,}515{,}940{,}949 \\ \hline
 $x^2 + 1{,}644x$ & 756 & 864 & 1{,}494 & 55{,}249{,}452 & 3{,}052{,}592{,}776{,}399{,}393 \\ \hline
 $x^2 + 1{,}645x$ & 500 & 795 & 2{,}510 & 17{,}889{,}300 & 320{,}056{,}482{,}388{,}501 \\ \hline
@@ -1994,13 +1998,6 @@ $x^2 + 1{,}692x$ & 1{,}120 & 1{,}192 & 1{,}652 & 5{,}994{,}493 & 35{,}944{,}089{
 $x^2 + 1{,}693x$ & 1{,}274 & 1{,}394 & 1{,}698 & 9{,}537{,}876 & 90{,}987{,}226{,}215{,}445 \\ \hline
 $x^2 + 1{,}694x$ & 3{,}234 & 3{,}927 & 8{,}239 & 113{,}190{,}147 & 12{,}812{,}201{,}121{,}990{,}628 \\ \hline
 $x^2 + 1{,}695x$ & 3{,}015 & 3{,}078 & 3{,}690 & 22{,}258{,}800 & 495{,}491{,}906{,}106{,}001 \\ \hline
-
-\end{tabular}\pagebreak
-
-\begin{tabular}{ | c | r | r | r | r | r | }
-\hline
-
-$g$ & $x$ & $y$ & $z$ & $w$ & $PW(4, \{g\}) <$ \\ \hline
 $x^2 + 1{,}696x$ & 896 & 1{,}216 & 3{,}328 & 31{,}809{,}344 & 1{,}011{,}888{,}314{,}357{,}761 \\ \hline
 $x^2 + 1{,}697x$ & 754 & 1{,}084 & 3{,}016 & 16{,}062{,}462 & 258{,}029{,}943{,}499{,}459 \\ \hline
 $x^2 + 1{,}698x$ & 1{,}998 & 2{,}349 & 2{,}853 & 37{,}333{,}251 & 1{,}393{,}835{,}022{,}089{,}200 \\ \hline
@@ -2054,13 +2051,6 @@ $x^2 + 1{,}745x$ & 205 & 250 & 535 & 29{,}938{,}014 & 896{,}336{,}924{,}098{,}62
 $x^2 + 1{,}746x$ & 3{,}834 & 3{,}996 & 4{,}356 & 59{,}307{,}552 & 3{,}517{,}489{,}275{,}218{,}497 \\ \hline
 $x^2 + 1{,}747x$ & 2{,}375 & 2{,}409 & 5{,}279 & 51{,}791{,}808 & 2{,}682{,}481{,}856{,}197{,}441 \\ \hline
 $x^2 + 1{,}748x$ & 1{,}122 & 1{,}362 & 2{,}842 & 20{,}877{,}528 & 435{,}907{,}669{,}309{,}729 \\ \hline
-
-\end{tabular}\pagebreak
-
-\begin{tabular}{ | c | r | r | r | r | r | }
-\hline
-
-$g$ & $x$ & $y$ & $z$ & $w$ & $PW(4, \{g\}) <$ \\ \hline
 $x^2 + 1{,}749x$ & 2{,}805 & 3{,}069 & 3{,}762 & 27{,}560{,}412 & 759{,}624{,}512{,}770{,}333 \\ \hline
 $x^2 + 1{,}750x$ & 161 & 245 & 861 & 4{,}281{,}375 & 18{,}337{,}664{,}296{,}876 \\ \hline
 $x^2 + 1{,}751x$ & 2{,}023 & 2{,}193 & 2{,}788 & 106{,}279{,}172 & 11{,}295{,}448{,}495{,}835{,}757 \\ \hline
@@ -2114,13 +2104,6 @@ $x^2 + 1{,}798x$ & 1{,}470 & 1{,}572 & 1{,}778 & 8{,}477{,}448 & 71{,}882{,}367{
 $x^2 + 1{,}799x$ & 1{,}275 & 1{,}788 & 3{,}322 & 39{,}973{,}362 & 1{,}597{,}941{,}581{,}661{,}283 \\ \hline
 $x^2 + 1{,}800x$ & 1{,}008 & 1{,}170 & 1{,}350 & 6{,}305{,}364 & 39{,}768{,}964{,}827{,}697 \\ \hline
 $x^2 + 1{,}801x$ & 5{,}904 & 6{,}023 & 6{,}281 & 58{,}805{,}742 & 3{,}458{,}221{,}201{,}311{,}907 \\ \hline
-
-\end{tabular}\pagebreak
-
-\begin{tabular}{ | c | r | r | r | r | r | }
-\hline
-
-$g$ & $x$ & $y$ & $z$ & $w$ & $PW(4, \{g\}) <$ \\ \hline
 $x^2 + 1{,}802x$ & 1{,}828 & 2{,}110 & 2{,}446 & 99{,}468{,}168 & 9{,}894{,}095{,}686{,}914{,}961 \\ \hline
 $x^2 + 1{,}803x$ & 3{,}192 & 3{,}423 & 3{,}684 & 21{,}661{,}918 & 469{,}277{,}747{,}876{,}879 \\ \hline
 $x^2 + 1{,}804x$ & 644 & 819 & 1{,}827 & 67{,}757{,}133 & 4{,}591{,}151{,}306{,}247{,}622 \\ \hline
@@ -2174,13 +2157,6 @@ $x^2 + 1{,}851x$ & 759 & 855 & 1{,}233 & 8{,}261{,}352 & 68{,}265{,}228{,}630{,}
 $x^2 + 1{,}852x$ & 876 & 1{,}052 & 2{,}472 & 11{,}354{,}208 & 128{,}939{,}067{,}300{,}481 \\ \hline
 $x^2 + 1{,}853x$ & 4{,}842 & 4{,}888 & 5{,}108 & 37{,}013{,}348 & 1{,}370{,}056{,}515{,}902{,}949 \\ \hline
 $x^2 + 1{,}854x$ & 1{,}631 & 1{,}771 & 2{,}095 & 26{,}345{,}027 & 694{,}109{,}291{,}310{,}788 \\ \hline
-
-\end{tabular}\pagebreak
-
-\begin{tabular}{ | c | r | r | r | r | r | }
-\hline
-
-$g$ & $x$ & $y$ & $z$ & $w$ & $PW(4, \{g\}) <$ \\ \hline
 $x^2 + 1{,}855x$ & 9{,}758 & 9{,}800 & 10{,}262 & 133{,}965{,}804 & 17{,}947{,}085{,}147{,}932{,}837 \\ \hline
 $x^2 + 1{,}856x$ & 5{,}760 & 5{,}824 & 6{,}000 & 56{,}285{,}712 & 3{,}168{,}185{,}841{,}628{,}417 \\ \hline
 $x^2 + 1{,}857x$ & 12{,}075 & 12{,}093 & 14{,}683 & 255{,}379{,}330 & 65{,}219{,}076{,}430{,}664{,}711 \\ \hline
@@ -2234,13 +2210,6 @@ $x^2 + 1{,}904x$ & 22{,}560 & 22{,}576 & 22{,}732 & 561{,}215{,}952 & 314{,}964{
 $x^2 + 1{,}905x$ & 4{,}185 & 4{,}260 & 4{,}755 & 32{,}882{,}436 & 1{,}081{,}317{,}238{,}334{,}677 \\ \hline
 $x^2 + 1{,}906x$ & 638 & 848 & 1{,}173 & 7{,}547{,}859 & 56{,}984{,}561{,}703{,}136 \\ \hline
 $x^2 + 1{,}907x$ & 2{,}223 & 2{,}668 & 3{,}381 & 63{,}707{,}298 & 4{,}058{,}741{,}308{,}278{,}091 \\ \hline
-
-\end{tabular}\pagebreak
-
-\begin{tabular}{ | c | r | r | r | r | r | }
-\hline
-
-$g$ & $x$ & $y$ & $z$ & $w$ & $PW(4, \{g\}) <$ \\ \hline
 $x^2 + 1{,}908x$ & 423 & 693 & 1{,}749 & 46{,}779{,}453 & 2{,}188{,}406{,}478{,}175{,}534 \\ \hline
 $x^2 + 1{,}909x$ & 5{,}819 & 5{,}934 & 6{,}624 & 91{,}509{,}594 & 8{,}374{,}180{,}485{,}859{,}783 \\ \hline
 $x^2 + 1{,}910x$ & 15{,}600 & 15{,}610 & 17{,}535 & 379{,}532{,}139 & 144{,}045{,}369{,}440{,}300{,}812 \\ \hline
@@ -2294,13 +2263,6 @@ $x^2 + 1{,}957x$ & 2{,}261 & 2{,}451 & 3{,}116 & 132{,}757{,}028 & 17{,}624{,}68
 $x^2 + 1{,}958x$ & 5{,}775 & 5{,}907 & 6{,}303 & 56{,}245{,}398 & 3{,}163{,}654{,}924{,}667{,}689 \\ \hline
 $x^2 + 1{,}959x$ & 2{,}835 & 2{,}865 & 6{,}399 & 71{,}406{,}792 & 5{,}099{,}069{,}829{,}636{,}793 \\ \hline
 $x^2 + 1{,}960x$ & 5{,}696 & 5{,}720 & 5{,}844 & 143{,}449{,}776 & 20{,}578{,}119{,}396{,}011{,}137 \\ \hline
-
-\end{tabular}\pagebreak
-
-\begin{tabular}{ | c | r | r | r | r | r | }
-\hline
-
-$g$ & $x$ & $y$ & $z$ & $w$ & $PW(4, \{g\}) <$ \\ \hline
 $x^2 + 1{,}961x$ & 46{,}150 & 46{,}324 & 47{,}040 & 2{,}393{,}508{,}882 & 5{,}728{,}889{,}461{,}883{,}807{,}527 \\ \hline
 $x^2 + 1{,}962x$ & 945 & 1{,}053 & 1{,}953 & 10{,}820{,}790 & 117{,}110{,}726{,}614{,}081 \\ \hline
 $x^2 + 1{,}963x$ & 517 & 559 & 2{,}749 & 83{,}502{,}338 & 6{,}972{,}804{,}366{,}555{,}739 \\ \hline
@@ -2342,13 +2304,6 @@ $x^2 + 1{,}998x$ & 4{,}788 & 4{,}854 & 5{,}568 & 50{,}932{,}648 & 2{,}594{,}236{
 $x^2 + 1{,}999x$ & 1{,}235 & 1{,}757 & 2{,}789 & 14{,}633{,}322 & 214{,}163{,}364{,}766{,}363 \\ \hline
 $x^2 + 2{,}000x$ & 184 & 280 & 984 & 5{,}592{,}000 & 31{,}281{,}648{,}000{,}001 \\ \hline
 
-\end{tabular}
-\pagebreak
-
-\begin{tabular}{ | c | r | r | r | r | r | }
-\hline
-
-$g$ & $x$ & $y$ & $z$ & $w$ & $PW(4, \{g\}) <$ \\ \hline
 $2x^2 + 57x$ & 3{,}969 & 4{,}035 & 4{,}295 & 38{,}199{,}155 & 2{,}918{,}353{,}062{,}779{,}886 \\ \hline
 $2x^2 + 95x$ & 707 & 758 & 1{,}008 & 14{,}365{,}638 & 412{,}744{,}475{,}029{,}699 \\ \hline
 $2x^2 + 171x$ & 11{,}907 & 12{,}105 & 12{,}885 & 343{,}792{,}395 & 236{,}386{,}480{,}508{,}171{,}596 \\ \hline
@@ -2397,6 +2352,12 @@ $3x^2 + 1{,}087x$ & 9{,}800 & 9{,}909 & 11{,}434 & 604{,}108{,}526 & 1{,}094{,}8
 $3x^2 + 1{,}112x$ & 18{,}800 & 18{,}816 & 18{,}902 & 1{,}094{,}699{,}196 & 3{,}595{,}100{,}206{,}474{,}645{,}201 \\ \hline
 
 
-\end{tabular}
-\end{center}
+\end{longtable}
+
+\section{Future Work}
+
+In the process of bounding $PW(4, \{x^2\})$, I generated many Pythagorean $K_3$'s;
+they could potentially have interesting number-theoretic properties, outside of their use in this proof.
+It seems likely that there exist greater Pythagorean $K_n$ as well, but generating them with this method is infeasible.
+
 \end{document}
