@@ -4,7 +4,7 @@ package polyvdw;
 import java.util.HashMap;
 import java.util.ArrayList;
 import static polyvdw.VdwLib.*;
-import static polyvdw.TikzLib.*;
+import static polyvdw.TableLib.*;
 import java.util.Arrays;
 
 public class ThreeColorRunner {
@@ -17,13 +17,13 @@ public class ThreeColorRunner {
 
   public static void main(String[] args)  throws Exception {
     outputList = new ArrayList<String>();
-    outputList.add(TikzLib.preamble);
+    outputList.add(TableLib.preamble3);
     ArrayList<long[]> params = getParams(PARAM_MAX);
 
     for(long[] p : params) {
       minBound(p[0], p[1], MAX);
     }
-    outputList.add(TikzLib.end);
+    outputList.add(TableLib.end);
     write(outputList, OUT_PATH);
   }
 
@@ -51,8 +51,7 @@ public class ThreeColorRunner {
     System.out.println(output);
     if(bound != null) {
       long boundValue = poly.val(bound[1]) + poly.val(bound[2]);
-      outputList.add("$ PW(3, " + poly.toString() + ") < " + poly.toBound(boundValue) + "$\n\\vspace{10pt}\n");
-      //outputList.addAll(configToTikz(poly, bound));
+      outputList.addAll(config3ToTable(poly, bound));
       write(outputList, OUT_PATH);
     }
     if(!doubleCheck(poly, bound)) {

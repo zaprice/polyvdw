@@ -6,11 +6,15 @@ import static polyvdw.VdwLib.*;
 
 public class TableLib {
 
-  public static final String preamble = "\\documentclass{article}\n\n\\usepackage[margin=.7in]{geometry}\n\n\\begin{document}\n\n\\begin{center}\\begin{tabular}{ | c | r | r | r | r | r | }\n\\hline\n\n"
-  + "$g$ & $x$ & $y$ & $z$ & $w$ & $PW(4, \\{g\\}) <$ \\\\ \\hline";
-  public static final String newPage = "\n\\end{tabular}\\pagebreak\n\n\\begin{tabular}{ | c | r | r | r | r | r | }\n\\hline\n\n"
-  + "$g$ & $x$ & $y$ & $z$ & $w$ & $PW(4, \\{g\\}) <$ \\\\ \\hline";
-  public static final String end = "\n\\hline\n\\end{tabular}\n\\end{center}\\end{document}";
+  public static final String preamble = "\\documentclass{article}\n\n\\usepackage[margin=.7in]{geometry}\n\\usepackage{longtable}\n\n\\begin{document}\n\n"
+  + "\\begin{longtable}{ | l | r | r | r | r | r | }\n\\hline\n\n"
+  + "\\multicolumn{1}{|c|}{$g$} &\n\\multicolumn{1}{|c|}{$x$} &\n\\multicolumn{1}{|c|}{$y$} &\n\\multicolumn{1}{|c|}{$z$} &\n\\multicolumn{1}{|c|}{$w$} &\n\\multicolumn{1}{|c|}{$PW(4, \\{g\\}) <$} \\\\ \\hline\n\\endhead\n\n";
+
+  public static final String preamble3 = "\\documentclass{article}\n\n\\usepackage[margin=.7in]{geometry}\n\\usepackage{longtable}\n\n\\begin{document}\n\n"
+  + "\\begin{longtable}{ | l | r | r | r | }\n\\hline\n\n"
+  + "\\multicolumn{1}{|c|}{$g$} &\n\\multicolumn{1}{|c|}{$x$} &\n\\multicolumn{1}{|c|}{$y$} &\n\\multicolumn{1}{|c|}{$PW(3, \\{g\\}) <$} \\\\ \\hline\n\\endhead\n\n";
+
+  public static final String end = "\n\n\\end{longtable}\n\\end{document}";
 
   public static ArrayList<String> configToTable(DegreeTwoPoly poly, long[] kthreew) {
     ArrayList<String> output = new ArrayList<String>();
@@ -28,8 +32,17 @@ public class TableLib {
 
     output.add(row);
     return(output);
+  }
 
+  public static ArrayList<String> config3ToTable(DegreeTwoPoly poly, long[] bound) {
+    ArrayList<String> output = new ArrayList<String>();
+    String row = "$" + poly.toString() + "$ & " +
+      commas(bound[1]) + " & " +
+      commas(bound[2]) + " & " +
+      commas(poly.val(poly.val(bound[1]) + poly.val(bound[2]))+1) + " \\\\ \\hline";
 
+    output.add(row);
+    return(output);
   }
 
 }
