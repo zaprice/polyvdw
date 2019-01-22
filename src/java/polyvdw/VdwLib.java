@@ -4,6 +4,8 @@ package polyvdw;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.charset.Charset;
@@ -74,14 +76,23 @@ public class VdwLib {
     while(!paramsGen.isDone()) {
       long[] t = paramsGen.nextFarey();
       params.add(t);
+      // Add swapped version too, to account for coprime (A,B) with B < A
+      // This will add duplicates
+      params.add(swap(t));
     }
-    // Need to add (n,1)
-    for(long i = 1; i <= max; i++) {
-      params.add(new long[] {i, 1});
-    }
+    // Need to deduplicate
+    Set<long[]> set = new HashSet<long[]>(params);
+    params.clear();
+    params.addAll(set);
+
+    // Then add x^2 and sort
     params.add(new long[] {1, 0});
     params.sort(new LexicalComparator());
     return(params);
+  }
+
+  public static long[] swap(long[] input) {
+    return(new long[] {input[1], input[0]});
   }
 
 }
