@@ -9,6 +9,8 @@
 \usepackage{tikz}
 \usepackage{longtable}
 \usepackage{hyperref}
+\usepackage{float}
+\usepackage[labelsep=none]{caption}
 
 %%\setlength{\textwidth}{28cc} \setlength{\textheight}{42cc}
 
@@ -79,7 +81,7 @@ Taking $1$ as $\RR$, any $n^2+1$ must be $\BB$ or $\GG$.
 A configuration of $a,b$ where $(a^2+1)-(b^2+1)=c^2$ would result in $1, a^2+1, b^2+1$ all different colors.
 This is just a Pythagorean triple; using $(3,4,5)$ gives us:
 
-\begin{figure}[htb]
+\begin{figure}[H]
 \begin{tikzpicture}
 [scale=.8,auto=left]
 
@@ -95,6 +97,8 @@ This is just a Pythagorean triple; using $(3,4,5)$ gives us:
 \draw [{sloped,anchor=south,auto=false}] (n3) -- node {$16 = 4^2$}(n4);
 
 \end{tikzpicture}
+\caption{}
+\label{fig:M0}
 \end{figure}
 
 By symmetry, we know that 42 must also be $\RR$.
@@ -120,8 +124,7 @@ $$
 We iterated this construction to obtain the square $w^2$ which must be $\RR$, completing the proof.
 To generalize this method to four colors, we need a $K_4$ colored $\RR\BB\GG\YY$ and another $w$ which must be $\RR$, as in:
 
-\pagebreak
-\begin{figure}[Htb]
+\begin{figure}[H]
 \begin{tikzpicture}
 [scale=.4,auto=left]
 
@@ -142,6 +145,8 @@ To generalize this method to four colors, we need a $K_4$ colored $\RR\BB\GG\YY$
 \draw [{sloped,anchor=south,auto=false}] (n4) -- node {$f^2$}(n5);
 
 \end{tikzpicture}
+\caption{}
+\label{fig:M4}
 \end{figure}
 
 Or as a system:
@@ -199,7 +204,7 @@ We can get bounds for nearly any $PW(4,x^2+Bx)$ with this method,
 but I've only found a few bounds for the more general $Ax^2+Bx$ case;
 if such configurations exist, it seems the numbers involved are much larger.
 In addition, we can apply a simpler version of this procedure to $PW(3,Ax^2+Bx)$,
-which produces bounds for nearly any $A, B$.
+which produces bounds for nearly any $(A, B)$.
 
 \section{Future Work}
 
@@ -219,7 +224,7 @@ As an example, where $g(x)=x^2$,
 $ PW(4, x^2) < 1+290{,}085{,}289\times 290{,}085{,}289 = 84{,}149{,}474{,}894{,}213{,}522$
 %%\vspace{10pt}
 
-\begin{center}
+\begin{figure}[H]
 \begin{tikzpicture}
 [scale=.7,auto=left]
 
@@ -253,14 +258,14 @@ $ PW(4, x^2) < 1+290{,}085{,}289\times 290{,}085{,}289 = 84{,}149{,}474{,}894{,}
 
 \end{tikzpicture}
 %%\vspace{10pt}
-
-\end{center}
+\caption{}
+\label{fig:M2}
+\end{figure}
 
 Configurations and bounds are given in the following table by $(g,x,y,z,w)$, where the polynomial Van der Waerden number
 $PW(4, \{g\})$ is bounded above by $g(w)+1$ when $x,y,z,w$ form the following configuration:
 
-%%\begin{figure}[htb]
-\begin{center}
+\begin{figure}[H]
 \begin{tikzpicture}
 [scale=.5,auto=left]
 
@@ -281,16 +286,19 @@ $PW(4, \{g\})$ is bounded above by $g(w)+1$ when $x,y,z,w$ form the following co
 \draw [{sloped,anchor=south,auto=false}] (n4) -- node {$g(f)$}(n5);
 
 \end{tikzpicture}
-\end{center}
 
-%%\caption{M1} \label{fig:M1}
-%%\end{figure}
 
-If $g=Ax+Bx^2$, then bounds for the polynomial $n\cdot g$ for some natural number $n$
-are simply $PW(4, \{ng\}) = g(n)\cdot PW(4, \{g\})$.
+\caption{}
+\label{fig:M3}
+\end{figure}
+
+If $g=Ax^2+Bx$, then bounds for the polynomial $n\cdot g$ for some natural number $n$
+are simply $PW(4, \{ng\}) < g(n\cdot w)+1$,
+where $w$ is the corresponding value from the configuration for $g$.
 Thus, only bounds for coprime coefficients $(A,B)$ are presented.
 
 \begin{longtable}{ | l | r | r | r | r | r | }
+\caption{}\\
 \hline
 
 \multicolumn{1}{|c|}{$g$} &
@@ -2353,9 +2361,11 @@ $3x^2 + 1{,}112x$ & 18{,}800 & 18{,}816 & 18{,}902 & 1{,}094{,}699{,}196 & 3{,}5
 \end{longtable}
 
 Configurations and bounds are given for the three-color version by $(g,x,y)$, where the polynomial Van der Waerden number
-$PW(3, \{g\})$ is bounded above by $g(g(x)+g(y))+1$ when $x,y,g(x)+g(y)$ form a configuration similar to Figure 1.
+$PW(3, \{g\})$ is bounded above by $g(g(x)+g(y))+1$ when $x,y,g(x)+g(y)$ form a configuration similar to Figure \ref{fig:M0}.
+Again, only coprime coefficients are considered.
 
 \begin{longtable}{ | l | r | r | r | }
+\caption{}\\
 \hline
 
 \multicolumn{1}{|c|}{$g$} &
