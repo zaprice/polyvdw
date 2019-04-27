@@ -8,6 +8,7 @@
 %%\usepackage[hyphens]{url} \urlstyle{same}
 \usepackage{tikz}
 \usepackage{longtable}
+\usepackage{hyperref}
 
 %%\setlength{\textwidth}{28cc} \setlength{\textheight}{42cc}
 
@@ -50,17 +51,18 @@ First, we state the standard and polynomial versions of van der Waerden's theore
   For any positive integers $c,k$ there is some number $N=W(c,k)$ such that if the integers $\{1,\ldots,N\}$ are $c$-colored, then there must be $k$ integers in arithmetic progression that are the same color.
 \end{thm}
 
-This is a classic Ramsey-type theorem: if you color $\{1,\ldots,N\}$, there is no way to avoid creating some monochromatic structure (for large enough $N$), in this case an arithmetic progression of length $k$.
+This is a classic Ramsey-type theorem: if you color $\{1,\ldots,N\}$, there is no way to avoid creating some monochromatic sub-structure for large enough $N$, in this case an arithmetic progression of length $k$.
 Starting with a progression like $\{a_0, a_0+r, a_0+2r,\ldots, a_0+kr\}$ where the difference between each term is the constant $r$, we can generalize by replacing that constant with a set of $k$ functions.
 We take some fixed $d$ and consider polynomials $\{p_1,\ldots,p_k\}$ with all $p_i(0)=0$; our new "progression" is $\{a_0, a_0+p_1(d), a_0+p_2(d),\ldots, a_0+p_k(d)\}$.
 This leads to the statement of the polynomial van der Waerden theorem:
 
 \begin{thm}
-  For any positive integers $c,k$ and a set $\{p_1,\ldots,p_k\}$ of polynomials with $p_i(0)=0$, there exists some number $N=PW(c,\{p_1,\ldots,p_k\})$ such that any $c$-coloring of $\{1,\ldots,N\}$ has a monochromatic subset $\{a_0, a_0+p_1(d), a_0+p_2(d),\ldots, a_0+p_k(d)\}$ for some $d$.
+  For any positive integers $c,k$ and a set $\{p_1,\ldots,p_k\}$ of polynomials with $p_i(0)=0$, there exists some number $N=PW(c,\{p_1,\ldots,p_k\})$ such that any $c$-coloring of $\{1,\ldots,N\}$ has a monochromatic subset \\${\{a_0, a_0+p_1(d), a_0+p_2(d),\ldots, a_0+p_k(d)\}}$ for some $d$.
 \end{thm}
 
 This generalizes the standard theorem as the previous arithmetic progression has polynomials $p_i(x) = ix$ and $d=r$.
-The bounds you get on $W(c,k)$ and $PW(c,\{p_1,\ldots,p_k\})$ from proving these theorems are very large; computing exact values is intractable and bounds can be computationally expensive to even verify.
+The bounds you get on $W(c,k)$ and $PW(c,\{p_1,\ldots,p_k\})$ from proving these theorems are very large.
+Moreover, computing exact values is intractable, and other bounds can be computationally expensive to even verify.
 As such, it's an interesting exercise to see if we can improve the bounds on $PW$ by some method which is checkable in an elementary way.
 
 
@@ -101,7 +103,7 @@ All $1+i\cdot41$ are $\RR$, so $1+41^2$ is the same color as $1$, providing a bo
 
 \section{Methods}
 
-We write our $\N$-colorings starting at $0$ for simplicity, but final bounds $PW(4, \{g\}) < \ldots$ will be written as if starting from $1$.
+We write our $\N$-colorings starting at $0$ for simplicity, but final bounds \\${PW(4, \{g\}) < \ldots}$ will be written as if starting from $1$.
 
 For the 3-color case, we built a $K_3$ with different colored vertices using a Pythagorean triple;
 then we found an integer a square away from the $\BB$ and $\GG$ vertices, which must be $\RR$.
@@ -162,9 +164,9 @@ Note that $(a,b,c)$ is a Pythagorean $K_3$ as well.
 It was shown (cite) in 1970 that there is no decision procedure for the solvability of arbitrary Diophantine equations, so solving this system is going to be more difficult than making a library call.
 However, we can make some simplifications so our search is not strictly brute-force.
 
-Each equation in the first block is a Pythagorean triple, for which we have a known formula with parameters $k,m,n$ where $m > n$, and $m,n$ are coprime but not both odd.
-From here, we can use the Farey sequence as an efficient algorithm to generate coprime pairs $m,n$.
-Then, we check if our triples overlap to form a $K_3$, and from there check if that $K_3$ has some $w$ satisfying the constraints.
+Each equation in the first block is a Pythagorean triple, for which we have a known formula with parameters $k,m,n$ where $m > n$, and $m,n$ are coprime but not both odd;
+we can use the Farey sequence as an efficient algorithm to generate coprime pairs $m,n$.
+From here, we check if our triples overlap to form a $K_3$, and then check if that $K_3$ has some $w$ satisfying the constraints.
 One important observation is that a triple $(x,y,z)$ is part of a $K_3$ precisely when the smallest difference $a^2 = y^2 - x^2$ is part of another
 triple $(a,b,c)$.
 
@@ -180,20 +182,20 @@ $z$ is an integer \textit{iff} $4A^2(x^2+y^2)+4AB(x+y)+B^2=(2Az+B)^2$ is an odd 
 This can be factored into $(2Ax+B)^2+(2Ay+B)^2=(2Az+B)^2+B^2$, or $m^2+n^2=k^2+B^2$ with some constraints on $m,n,k$.
 
 A parameterization of $m^2+n^2=k^2+B^2$ would imply one for $(x,y,z)$, and luckily this equation is easier.
-Using the \textit{Bramagupta-Fibonacci identity} with $bc-ad=B$, we get:
+Using the \textit{Bramagupta-Fibonacci identity} with ${bc-ad=B}$, we get:
 
 $$(ac-bd)^2 + (ad+bc)^2 = (ac+bd)^2 + B^2$$
 
-So, with parameters $a,b,c,d$ and constraints $bc-ad=B$, $ac-bd> B$, $2A\vert ac-bd-B, ad+bc-B$, we have:
+So, with parameters $a,b,c,d$ and constraints $bc-ad=B$, $ac-bd> B$, ${2A\vert ac-bd-B}, ad+bc-B$, we have:
 
 $$x = \frac{ac-bd-B}{2A},\ y = \frac{ad+bc-B}{2A},\ z = \frac{ac+bd-B}{2A}$$
 
-Rather than searching all $(a,b,c,d)$, we could eliminate parts of the parameter space that we know do not contain solutions.
+Rather than searching all $(a,b,c,d)$, we can eliminate parts of the parameter space that do not contain solutions.
 With fixed $a$ and $d$, the first constraint implies that $bc$ is some factorization of $ad + B$.
-We can pre-compute a table of factorizations and use that to cut the search space down to basically $n^2$.
-You can see the code for this on GitHub (link)!
+We can pre-compute a table of factorizations and use that to cut the search space down to $n^2$.
+You can see the code for this on GitHub at \url{https://github.com/zaprice/polyvdw}
 
-We can find bounds for nearly any $PW(4,x^2+Bx)$ with this method,
+We can get bounds for nearly any $PW(4,x^2+Bx)$ with this method,
 but I've only found a few bounds for the more general $Ax^2+Bx$ case;
 if such configurations exist, it seems the numbers involved are much larger.
 In addition, we can apply a simpler version of this procedure to $PW(3,Ax^2+Bx)$,
@@ -283,6 +285,10 @@ $PW(4, \{g\})$ is bounded above by $g(w)+1$ when $x,y,z,w$ form the following co
 
 %%\caption{M1} \label{fig:M1}
 %%\end{figure}
+
+If $g=Ax+Bx^2$, then bounds for the polynomial $n\cdot g$ for some natural number $n$
+are simply $PW(4, \{ng\}) = g(n)\cdot PW(4, \{g\})$.
+Thus, only bounds for coprime coefficients $(A,B)$ are presented.
 
 \begin{longtable}{ | l | r | r | r | r | r | }
 \hline
