@@ -40,7 +40,9 @@
 \vspace{18mm} \setcounter{page}{1} \thispagestyle{empty}
 
 \begin{abstract}
-
+  Computing exact values for polynomial van der Waerden numbers is intractable,
+  and most bounds are complicated to derive or difficult to verify computatonally.
+  In this paper, upper bounds which can be easily checked are computed for many polynomial van der Waerden numbers.
 \end{abstract}
 
 \maketitle
@@ -166,16 +168,16 @@ I've taken to calling $(x,y,z)$ a \textit{Pythagorean $K_3$} as a generalization
 rather than two squares with a square difference, we have three squares with square pairwise differences.
 Note that $(a,b,c)$ is a Pythagorean $K_3$ as well.
 
-It was shown (cite) in 1970 that there is no decision procedure for the solvability of arbitrary Diophantine equations, so solving this system is going to be more difficult than making a library call.
+It was shown in 1970 that there is no decision procedure for the solvability of arbitrary Diophantine equations, Hilbert's tenth problem, so solving this system is going to be more difficult than making a library call.
 However, we can make some simplifications so our search is not strictly brute-force.
 
 Each equation in the first block is a Pythagorean triple, for which we have a known formula with parameters $k,m,n$ where $m > n$, and $m,n$ are coprime but not both odd;
 we can use the Farey sequence as an efficient algorithm to generate coprime pairs $m,n$.
-From here, we check if our triples overlap to form a $K_3$, and then check if that $K_3$ has some $w$ satisfying the constraints.
+From here, we check if our triples overlap to form a $K_3$, and then search for some $w$ satisfying the constraints.
 One important observation is that a triple $(x,y,z)$ is part of a $K_3$ precisely when the smallest difference $a^2 = y^2 - x^2$ is part of another
 triple $(a,b,c)$.
 
-To use a similar algorithm for general quadratics $Ax^2+Bx$, we need a parameterization of integer solutions to $Ax^2+Bx + Ay^2+By = Az^2+Bz$,
+To use a similar algorithm for general quadratics $Ax^2+Bx$, we need a parameterization of integer solutions to $(Ax^2+Bx) + (Ay^2+By) = (Az^2+Bz)$
 similar to Euclid's formula for Pythagorean triples.
 First, we use the quadratic formula to express $z$ in terms of $x$ and $y$.
 
@@ -197,7 +199,7 @@ $$x = \frac{ac-bd-B}{2A},\ y = \frac{ad+bc-B}{2A},\ z = \frac{ac+bd-B}{2A}$$
 
 Rather than searching all $(a,b,c,d)$, we can eliminate parts of the parameter space that do not contain solutions.
 With fixed $a$ and $d$, the first constraint implies that $bc$ is some factorization of $ad + B$.
-We can pre-compute a table of factorizations and use that to cut the search space down to $n^2$.
+We can pre-compute a table of factorizations and use that to cut the search space down to almost $n^2$.
 You can see the code for this on GitHub at \url{https://github.com/zaprice/polyvdw}
 
 We can get bounds for nearly any $PW(4,x^2+Bx)$ with this method,
@@ -3924,5 +3926,15 @@ $50x^2 + 47x$ & 203 & 252 & 1{,}381{,}821{,}096{,}641{,}896 \\ \hline
 $50x^2 + 49x$ & 199 & 250 & 1{,}314{,}332{,}849{,}055{,}550 \\ \hline
 
 \end{longtable}
+
+\begin{thebibliography}{9}
+
+\bibitem{graham15}
+  R. Graham, B. Rothschild, J. Spencer,
+  \emph{Ramsey Theory}, second edition,
+  John Wiley \& Sons, Inc., Hoboken,
+  2015.
+
+\end{thebibliography}
 
 \end{document}
