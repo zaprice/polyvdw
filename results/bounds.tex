@@ -16,6 +16,9 @@
 
 \theoremstyle{plain}
 \newtheorem{thm}{Theorem}[section]
+\newtheoremstyle{named}{}{}{\itshape}{}{\bfseries}{.}{.5em}{\thmnote{#3 }#1}
+\theoremstyle{named}
+\newtheorem*{namedtheorem}{Theorem}
 %%\setlength{\parindent}{0pt}
 
 \newcommand{\RR} {\color{red} R}
@@ -28,7 +31,7 @@
 \author[Price]{Zachary Price}
 \subjclass[2010]{Primary 05D10; Secondary 11Y50}
 \keywords{polynomial van der Waerden; Ramsey theory; computational combinatorics; Diophantine equations}
-\thanks{Advised by William Gasarch, University of Maryland}
+\thanks{Department of Mathematics, George Mason University. Advised by William Gasarch, University of Maryland}
 \email{zprice11@gmail.com}
 \date{\today}
 
@@ -51,18 +54,18 @@
 
 First, we state the standard and polynomial versions of van der Waerden's theorem.
 
-\begin{thm}
+\begin{namedtheorem}[van der Waerden's]
   For any positive integers $c,k$ there is some number $N=W(c,k)$ such that if the integers $\{1,\ldots,N\}$ are $c$-colored, then there must be $k$ integers in arithmetic progression that are the same color.
-\end{thm}
+\end{namedtheorem}
 
 This is a classic Ramsey-type theorem: if you color $\{1,\ldots,N\}$, there is no way to avoid creating some monochromatic sub-structure for large enough $N$, in this case an arithmetic progression of length $k$.
 Starting with a progression like $\{a_0, a_0+r, a_0+2r,\ldots, a_0+kr\}$ where the difference between each term is the constant $r$, we can generalize by replacing that constant with a set of $k$ functions.
 We take some fixed $d$ and consider polynomials $\{p_1,\ldots,p_k\}$ with all $p_i(0)=0$; our new "progression" is $\{a_0, a_0+p_1(d), a_0+p_2(d),\ldots, a_0+p_k(d)\}$.
 This leads to the statement of the polynomial van der Waerden theorem:
 
-\begin{thm}
+\begin{namedtheorem}[Polynomial van der Waerden]
   For any positive integers $c,k$ and a set $\{p_1,\ldots,p_k\}$ of polynomials with $p_i(0)=0$, there exists some number $N=PW(c,\{p_1,\ldots,p_k\})$ such that any $c$-coloring of $\{1,\ldots,N\}$ has a monochromatic subset \\${\{a_0, a_0+p_1(d), a_0+p_2(d),\ldots, a_0+p_k(d)\}}$ for some $d$.
-\end{thm}
+\end{namedtheorem}
 
 This generalizes the standard theorem as the previous arithmetic progression has polynomials $p_i(x) = ix$ and $d=r$.
 The bounds you get on $W(c,k)$ and $PW(c,\{p_1,\ldots,p_k\})$ from proving these theorems are very large.
