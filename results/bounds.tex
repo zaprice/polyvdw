@@ -65,14 +65,14 @@ We take some fixed $d$ and consider polynomials $\{p_1,\ldots,p_k\}$ with all $p
 This leads to the statement of the polynomial van der Waerden theorem:
 
 \begin{namedtheorem}[Polynomial van der Waerden]
-  For any positive integers $c,k$ and a set $\{p_1,\ldots,p_k\}$ of polynomials with $p_i(0)=0$, there exists some number $N=PW(c,\{p_1,\ldots,p_k\})$ such that any $c$-coloring of $\{1,\ldots,N\}$ has a monochromatic subset ${\{a, a+p_1(d), a+p_2(d),\ldots, a+p_k(d)\}}$ for some $a,d\in\{1,\ldots,N\}$.
+  For any positive integer $c$ and any set $\{p_1,\ldots,p_k\}$ of polynomials with $p_i(0)=0$, there exists some number $N=PW(c,\{p_1,\ldots,p_k\})$ such that any $c$-coloring of $\{1,\ldots,N\}$ has a monochromatic subset ${\{a, a+p_1(d), a+p_2(d),\ldots, a+p_k(d)\}}$ for some $a,d\in\{1,\ldots,N\}$.
 \end{namedtheorem}
 
 This generalizes the standard theorem as the previous arithmetic progression has polynomials $p_i(x) = ix$ and $d=r$.
-The bounds you get on $W(c,k)$ and $PW(c,\{p_1,\ldots,p_k\})$ from proving these theorems are very large
-when the actual values are likely to be much smaller.
+The bounds you get on $W(c,k)$ and $PW(c,\{p_1,\ldots,p_k\})$ from proving these theorems are very large,
+while the actual values are likely to be much smaller.
 Moreover, computing exact values is intractable, and other bounds are complicated to derive or computationally expensive to verify.
-As such, it's interesting to see if we can improve the bounds on $PW$ by some method which is checkable in an elementary way.
+As such, it's interesting to see if we can improve the bounds on $PW$ by some method that is checkable in an elementary way.
 
 
 We begin with the simplest case; bounding the value of $PW(2,\{x^2\})$ is equivalent to asking for the smallest $N$ where any $2$-coloring of $\{1,\ldots,N\}$ must have two numbers the same color that are a square apart.
@@ -118,7 +118,7 @@ All $1+i\cdot41$ are $\RR$, so $1+41^2$ is the same color as $1$, providing a bo
 
 \section{Methods}
 
-We write our $\N$-colorings starting at $0$ for simplicity, but final bounds \\${PW(4, \{g\}) < \ldots}$ will be written as if starting from $1$.
+We write our $\N$-colorings starting at $0$ for simplicity, but final bounds \\${PW(4, \{g\}) \leq \ldots}$ will be written as if starting from $1$.
 
 For the 3-color case, we built a $K_3$ with different colored vertices using a Pythagorean triple;
 then we found an integer a square away from the $\BB$ and $\GG$ vertices, which must be $\RR$.
@@ -179,7 +179,7 @@ Note that $(a,b,c)$ is a Pythagorean $K_3$ as well.
 
 Each equation in the first block is a Pythagorean triple, for which we have a known formula with parameters $k,m,n$ where $m > n$, and $m,n$ are coprime but not both odd;
 we can use the Farey sequence as an efficient algorithm to generate coprime pairs $m,n$.
-From here, we check if our triples overlap to form a $K_3$, and then search for some $w$ satisfying the constraints.
+From here we check if our triples overlap to form a $K_3$, and then search for some $w$ satisfying the constraints.
 One important observation is that a triple $(x,y,z)$ is part of a $K_3$ precisely when the smallest difference $a^2 = y^2 - x^2$ is part of another
 triple $(a,b,c)$.
 
@@ -205,7 +205,7 @@ $$x = \frac{ac-bd-B}{2A},\ y = \frac{ad+bc-B}{2A},\ z = \frac{ac+bd-B}{2A}$$
 
 Rather than searching all $(a,b,c,d)$, we can eliminate parts of the parameter space that do not contain solutions.
 With fixed $a$ and $d$, the first constraint implies that $bc$ is some factorization of $ad + B$.
-We can pre-compute a table of factorizations and use that to cut the search space down to almost $n^2$.
+We can pre-compute a table of factorizations and use that to cut the search space down to almost $O(n^2)$.
 You can see the code for this on GitHub at \url{https://github.com/zaprice/polyvdw}
 
 We can get bounds for nearly any $PW(4,\{x^2+Bx\})$ with this method,
@@ -213,13 +213,13 @@ but I've only found a few bounds for the more general $Ax^2+Bx$ case;
 if such configurations exist, it seems the numbers involved are much larger.
 In addition, we can apply a simpler version of this procedure to $PW(3,\{Ax^2+Bx\})$,
 which produces bounds for nearly any $(A, B)$.
-Tables of bounds for $PW(4,\{Ax^2+Bx\})$ and $PW(3,\{x^2+Bx\})$ can be found in the Appendix.
+Tables of bounds for $PW(4,\{Ax^2+Bx\})$ and $PW(3,\{Ax^2+Bx\})$ can be found in the Appendix.
 
 We say such a configuration is \textit{elementary} because it is easily verified despite the fact that generating it may have involved arbitrarily complex computation.
 As an example, where $g(x)=x^2$,
 
 \begin{thm}
-$ PW(4, \{x^2\}) < 1+290{,}085{,}289\times 290{,}085{,}289 = 84{,}149{,}474{,}894{,}213{,}522$
+$ PW(4, \{x^2\}) \leq 1+290{,}085{,}289\times 290{,}085{,}289 = 84{,}149{,}474{,}894{,}213{,}522$
 \end{thm}
 
 \begin{proof}
@@ -267,8 +267,7 @@ See the following figure:
 
 \section{Future Work}
 
-The method described could potentially be extended to higher-degree polynomials or progressions longer than two, but there are complications
-(Fermat's last theorem, insolubility of the quintic; additional degrees of freedom).
+The method described could potentially be extended to higher-degree polynomials or progressions longer than two, but there are additional complications.
 The $2$-colorings corresponding to $PW(2,\{Ax^2+Bx\})$ should be examined: an efficient, computational description of the exact values seems possible.
 In the process of bounding $PW(4, \{x^2\})$, many Pythagorean $K_3$'s are generated;
 outside of their use in this proof, they may have interesting number-theoretic properties.
@@ -317,7 +316,7 @@ $PW(4, \{g\})$ is bounded above by $g(w)+1$ when $x,y,z,w$ form the following co
 \end{figure}
 
 If $g=Ax^2+Bx$, then bounds for the polynomial $n\cdot g$ for some natural number $n$
-are simply $PW(4, \{ng\}) < g(n\cdot w)+1$,
+are simply $PW(4, \{n\cdot g\}) \leq n\cdot g(n\cdot w)+1$,
 where $w$ is the corresponding value from the configuration for $g$.
 Thus, only bounds for coprime coefficients $(A,B)$ are presented.
 
@@ -330,7 +329,7 @@ Thus, only bounds for coprime coefficients $(A,B)$ are presented.
 \multicolumn{1}{|c|}{$y$} &
 \multicolumn{1}{|c|}{$z$} &
 \multicolumn{1}{|c|}{$w$} &
-\multicolumn{1}{|c|}{$PW(4, \{g\}) <$} \\ \hline
+\multicolumn{1}{|c|}{$PW(4, \{g\}) \leq$} \\ \hline
 \endhead
 $x^2$ & 10{,}608 & 13{,}108 & 16{,}133 & 290{,}085{,}289 & 84{,}149{,}474{,}894{,}213{,}522 \\ \hline
 $x^2 + x$ & 299 & 302 & 327 & 113{,}262 & 12{,}828{,}393{,}907 \\ \hline
@@ -2395,7 +2394,7 @@ Again, only coprime coefficients are considered.
 \multicolumn{1}{|c|}{$g$} &
 \multicolumn{1}{|c|}{$x$} &
 \multicolumn{1}{|c|}{$y$} &
-\multicolumn{1}{|c|}{$PW(3, \{g\}) <$} \\ \hline
+\multicolumn{1}{|c|}{$PW(3, \{g\}) \leq$} \\ \hline
 \endhead
 
 
