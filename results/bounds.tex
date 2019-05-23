@@ -110,7 +110,11 @@ This is just a Pythagorean triple; using $(3,4,5)$ gives us:
 
 By symmetry, we know that 42 must also be $\RR$.
 And we can iterate this construction! $42+4^2$ and $42+5^2$ must be either $\BB$ or $\GG$, and $42+4^2+5^2=1+2\cdot41$ must be $\RR$.
-All $1+i\cdot41$ are $\RR$, so $1+41^2$ is the same color as $1$, providing a bound of $PW(3, \{x^2\})\leq 1+41^2$.
+All $1+i\cdot41$ are $\RR$, so $1+41^2$ is the same color as $1$, providing a bound.
+
+\begin{thm}
+  $PW(3, \{x^2\})\leq 1+41^2$.
+\end{thm}
 
 \section{Methods}
 
@@ -204,29 +208,21 @@ With fixed $a$ and $d$, the first constraint implies that $bc$ is some factoriza
 We can pre-compute a table of factorizations and use that to cut the search space down to almost $n^2$.
 You can see the code for this on GitHub at \url{https://github.com/zaprice/polyvdw}
 
-We can get bounds for nearly any $PW(4,x^2+Bx)$ with this method,
+We can get bounds for nearly any $PW(4,\{x^2+Bx\})$ with this method,
 but I've only found a few bounds for the more general $Ax^2+Bx$ case;
 if such configurations exist, it seems the numbers involved are much larger.
-In addition, we can apply a simpler version of this procedure to $PW(3,Ax^2+Bx)$,
+In addition, we can apply a simpler version of this procedure to $PW(3,\{Ax^2+Bx\})$,
 which produces bounds for nearly any $(A, B)$.
-
-\section{Future Work}
-
-The method described could potentially be extended to higher-degree polynomials or progressions longer than two, but there are complications
-(Fermat's last theorem, insolubility of the quintic; additional degrees of freedom).
-The $2$-colorings corresponding to $PW(2,Ax^2+Bx)$ should be examined: an efficient, computational description of the exact values seems possible.
-In the process of bounding $PW(4, \{x^2\})$, many Pythagorean $K_3$'s are generated;
-outside of their use in this proof, they may have interesting number-theoretic properties.
-It seems likely that there exist greater Pythagorean $K_n$ as well, but generating them with this method is infeasible.
-
-\section{Results}
 
 We say such a configuration is \textit{elementary} because it is easily verified despite the fact that generating it may have involved arbitrarily complex computation.
 As an example, where $g(x)=x^2$,
 
-%%\vspace{10pt}
-$ PW(4, x^2) < 1+290{,}085{,}289\times 290{,}085{,}289 = 84{,}149{,}474{,}894{,}213{,}522$
-%%\vspace{10pt}
+\begin{thm}
+$ PW(4, \{x^2\}) < 1+290{,}085{,}289\times 290{,}085{,}289 = 84{,}149{,}474{,}894{,}213{,}522$
+\end{thm}
+
+\begin{proof}
+See the following figure:
 
 \begin{figure}[H]
 \begin{tikzpicture}
@@ -265,6 +261,19 @@ $ PW(4, x^2) < 1+290{,}085{,}289\times 290{,}085{,}289 = 84{,}149{,}474{,}894{,}
 \caption{}
 \label{fig:M2}
 \end{figure}
+
+\end{proof}
+
+\section{Future Work}
+
+The method described could potentially be extended to higher-degree polynomials or progressions longer than two, but there are complications
+(Fermat's last theorem, insolubility of the quintic; additional degrees of freedom).
+The $2$-colorings corresponding to $PW(2,\{Ax^2+Bx\})$ should be examined: an efficient, computational description of the exact values seems possible.
+In the process of bounding $PW(4, \{x^2\})$, many Pythagorean $K_3$'s are generated;
+outside of their use in this proof, they may have interesting number-theoretic properties.
+It seems likely that there exist greater Pythagorean $K_n$ as well, but generating them with this method is infeasible.
+
+\section{Results}
 
 Configurations and bounds are given in the following table by $(g,x,y,z,w)$, where the polynomial Van der Waerden number
 $PW(4, \{g\})$ is bounded above by $g(w)+1$ when $x,y,z,w$ form the following configuration:
