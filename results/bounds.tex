@@ -44,7 +44,7 @@
 
 \begin{abstract}
   Computing exact values for polynomial van der Waerden numbers is intractable,
-  and most bounds are complicated to derive or difficult to verify computatonally.
+  and most bounds are exceedingly large, complicated to derive, or difficult to verify computatonally.
   In this paper, upper bounds which can be easily checked are computed for many polynomial van der Waerden numbers.
 \end{abstract}
 
@@ -55,22 +55,24 @@
 First, we state the standard and polynomial versions of van der Waerden's theorem.
 
 \begin{namedtheorem}[van der Waerden's]
-  For any positive integers $c,k$ there is some number $N=W(c,k)$ such that if the integers $\{1,\ldots,N\}$ are $c$-colored, then there must be $k$ integers in arithmetic progression that are the same color.
+  For any positive integers $c,k$ there is some number $N=W(c,k)$ such that for any $c$-coloring of the integers $\{1,\ldots,N\}$, there
+  exist some $a,d\in \{1,\ldots,N\}$ such that $\{a, a+d, a+2d, \ldots, a+(k-1)d\}$ are the same color.
 \end{namedtheorem}
 
 This is a classic Ramsey-type theorem: if you color $\{1,\ldots,N\}$, there is no way to avoid creating some monochromatic sub-structure for large enough $N$, in this case an arithmetic progression of length $k$.
-Starting with a progression like $\{a_0, a_0+r, a_0+2r,\ldots, a_0+kr\}$ where the difference between each term is the constant $r$, we can generalize by replacing that constant with a set of $k$ functions.
-We take some fixed $d$ and consider polynomials $\{p_1,\ldots,p_k\}$ with all $p_i(0)=0$; our new "progression" is $\{a_0, a_0+p_1(d), a_0+p_2(d),\ldots, a_0+p_k(d)\}$.
+Starting with a progression like $\{a, a+d, a+2d,\ldots, a+kd\}$ where the difference between each term is the constant $r$, we can generalize by replacing that constant with a set of $k$ functions.
+We take some fixed $d$ and consider polynomials $\{p_1,\ldots,p_k\}$ with all $p_i(0)=0$; our new "progression" is $\{a, a+p_1(d), a+p_2(d),\ldots, a+p_k(d)\}$.
 This leads to the statement of the polynomial van der Waerden theorem:
 
 \begin{namedtheorem}[Polynomial van der Waerden]
-  For any positive integers $c,k$ and a set $\{p_1,\ldots,p_k\}$ of polynomials with $p_i(0)=0$, there exists some number $N=PW(c,\{p_1,\ldots,p_k\})$ such that any $c$-coloring of $\{1,\ldots,N\}$ has a monochromatic subset \\${\{a_0, a_0+p_1(d), a_0+p_2(d),\ldots, a_0+p_k(d)\}}$ for some $d$.
+  For any positive integers $c,k$ and a set $\{p_1,\ldots,p_k\}$ of polynomials with $p_i(0)=0$, there exists some number $N=PW(c,\{p_1,\ldots,p_k\})$ such that any $c$-coloring of $\{1,\ldots,N\}$ has a monochromatic subset ${\{a, a+p_1(d), a+p_2(d),\ldots, a+p_k(d)\}}$ for some $a,d\in\{1,\ldots,N\}$.
 \end{namedtheorem}
 
 This generalizes the standard theorem as the previous arithmetic progression has polynomials $p_i(x) = ix$ and $d=r$.
-The bounds you get on $W(c,k)$ and $PW(c,\{p_1,\ldots,p_k\})$ from proving these theorems are very large.
-Moreover, computing exact values is intractable, and other bounds can be computationally expensive to even verify.
-As such, it's an interesting exercise to see if we can improve the bounds on $PW$ by some method which is checkable in an elementary way.
+The bounds you get on $W(c,k)$ and $PW(c,\{p_1,\ldots,p_k\})$ from proving these theorems are very large
+when the actual values are likely to be much smaller.
+Moreover, computing exact values is intractable, and other bounds are complicated to derive or computationally expensive to verify.
+As such, it's interesting to see if we can improve the bounds on $PW$ by some method which is checkable in an elementary way.
 
 
 We begin with the simplest case; bounding the value of $PW(2,\{x^2\})$ is equivalent to asking for the smallest $N$ where any $2$-coloring of $\{1,\ldots,N\}$ must have two numbers the same color that are a square apart.
@@ -170,9 +172,6 @@ $$
 I've taken to calling $(x,y,z)$ a \textit{Pythagorean $K_3$} as a generalization of the Pythagorean triple --
 rather than two squares with a square difference, we have three squares with square pairwise differences.
 Note that $(a,b,c)$ is a Pythagorean $K_3$ as well.
-
-It was shown in 1970 that there is no decision procedure for the solvability of arbitrary Diophantine equations, Hilbert's tenth problem, so solving this system is going to be more difficult than making a library call.
-However, we can make some simplifications so our search is not strictly brute-force.
 
 Each equation in the first block is a Pythagorean triple, for which we have a known formula with parameters $k,m,n$ where $m > n$, and $m,n$ are coprime but not both odd;
 we can use the Farey sequence as an efficient algorithm to generate coprime pairs $m,n$.
