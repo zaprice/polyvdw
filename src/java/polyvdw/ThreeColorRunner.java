@@ -10,7 +10,7 @@ import java.util.Arrays;
 public class ThreeColorRunner {
 
   static final long MAX = 1000;
-  static final long PARAM_MAX = 100;
+  static final long PARAM_MAX = 50;
   static final String OUT_PATH = "/Users/zach/Documents/polyvdw/3bounds.tex";
   static ArrayList<String> outputList;
   static int count;
@@ -43,6 +43,7 @@ public class ThreeColorRunner {
       return;
     }
     // No bound found
+    System.out.println("no bound");
     finish(poly, null);
   }
 
