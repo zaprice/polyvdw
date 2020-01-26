@@ -2,6 +2,7 @@
 # polyvdw
 
 ### A computational exploration of Polynomial van der Waerden numbers
+Methods and results can be found in [TeX](https://github.com/zaprice/polyvdw/blob/master/results/bounds.tex) or [PDF](https://cryptopocalyp.se/assets/bounds.pdf) format.
 
 ### Results
 * Proved there exists an elementary configuration bounding PW(4, {x^2}) < 1+290085289^2
